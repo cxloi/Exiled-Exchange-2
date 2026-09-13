@@ -5,6 +5,20 @@
 [![GitHub commits since latest release (branch)](https://img.shields.io/github/commits-since/kvan7/exiled-exchange-2/latest/dev?style=plastic)](https://github.com/Kvan7/Exiled-Exchange-2/commits/dev/)
 [![Translation status](https://translate.codeberg.org/widget/exiled-exchange-2/svg-badge.svg)](https://translate.codeberg.org/engage/exiled-exchange-2/)
 
+<b>== THIS IS A FORK FOR MY OWN GAMING NEEDS ==</b> 
+
+A simple modification on existing StashSearch widget
+- add a new prefix logic to turn StashSearch button to open trade site based on name starts with #, become a hyperlink
+- append current league.id as uri component
+- entry without # is not affected
+
+1. find trade filter codes
+![Extract Trade Code](./renderer/public/images/tradeSite-code.png)
+2. configure using stash search panel
+![Configure Hashtag Link](./renderer/public/images/hashTag-link.png)
+3. build trade list
+![Build Equip List](./renderer/public/images/buildEquip-list.png)
+
 Path of Exile 2 overlay program for price checking items, among many other loved features.
 
 Fork of [Awakened PoE Trade](https://github.com/SnosMe/awakened-poe-trade).

@@ -14,7 +14,7 @@
         <button
           v-for="entry in config.entries"
           :key="entry.id"
-          @click="stashSearch(entry.text)"
+          @click="stashSearch(entry.name, entry.text)"
           :class="$style.searchBtn"
         >
           <span>{{ entry.name || entry.text }}</span>
@@ -102,12 +102,14 @@ import type { WidgetManager } from "../overlay/interfaces.js";
 
 import Widget from "../overlay/Widget.vue";
 import UiToggle from "@/web/ui/UiToggle.vue";
+import { useLeagues } from "@/web/background/Leagues";
 
 const props = defineProps<{
   config: StashSearchWidget;
 }>();
 
 const wm = inject<WidgetManager>("wm")!;
+const leagues = useLeagues();
 
 if (props.config.wmFlags[0] === "uninitialized") {
   props.config.wmFlags = ["invisible-on-blur"];
@@ -128,11 +130,19 @@ if (props.config.wmFlags[0] === "uninitialized") {
   wm.show(props.config.wmId);
 }
 
-function stashSearch(text: string) {
-  MainProcess.sendEvent({
-    name: "CLIENT->MAIN::user-action",
-    payload: { action: "stash-search", text },
-  });
+function stashSearch(name: string, text: string) {
+  if (name.startsWith("#")) {
+    const league = leagues.selected.value;
+    console.log(league);
+    window.open("https://www.pathofexile.com/trade2/search/poe2/"
+    + encodeURIComponent(league.id) + "/"
+    + text, "_blank");
+  } else {
+    MainProcess.sendEvent({
+      name: "CLIENT->MAIN::user-action",
+      payload: { action: "stash-search", text },
+    });
+  }
 }
 
 const hasHotkeys = computed(() =>
