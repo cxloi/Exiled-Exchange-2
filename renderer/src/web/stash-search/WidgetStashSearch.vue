@@ -132,7 +132,7 @@ if (props.config.wmFlags[0] === "uninitialized") {
 
 function stashSearch(name: string, text: string) {
   if (name.startsWith("#")) {
-    const league = leagues.selected.value;
+    const league = leagues.selected.value || {id: ''};
     console.log(league);
     window.open("https://www.pathofexile.com/trade2/search/poe2/"
     + encodeURIComponent(league.id) + "/"
