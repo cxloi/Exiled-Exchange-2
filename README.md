@@ -8,6 +8,7 @@ poe.ninja price next to each reward row, right in the game window:
 
 <b>== THIS IS A FORK FOR MY OWN GAMING NEEDS ==</b> 
 
+## 1. Item Trade list
 A simple modification on existing StashSearch widget
 - add a new prefix logic to turn StashSearch button to open trade site based on name starts with #, become a hyperlink
 - append current league.id as uri component
@@ -19,6 +20,13 @@ A simple modification on existing StashSearch widget
 ![Configure Hashtag Link](./renderer/public/images/hashTag-link.png)
 3. build trade list
 ![Build Equip List](./renderer/public/images/buildEquip-list.png)
+
+## 2. Expedition Price Check
+Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Exchange-2-Expedition-Checker) project, thanks to his implementation on Windows's OCR.
+
+1. add mac port of OCR
+![Build Equip List](./renderer/public/images/expedition-macPort.png)
+2. add chinese translation to expedition widget
 
 Path of Exile 2 overlay program for price checking items, among many other loved features.
 | | | |

@@ -54,7 +54,9 @@ interface OcrResponse {
 // OpenCV.js/Tesseract.js WASM engine): spawning a subprocess is already
 // asynchronous/non-blocking, so there's no heavy synchronous computation here to
 // keep off Electron's main thread.
-const WIN_SCRIPT_PATH = path.join(__dirname, "windows-ocr-recognize.ps1");
+const WIN_SCRIPT_PATH = app.isPackaged
+  ? path.join(process.resourcesPath, 'windows-ocr-recognize.ps1')
+  : path.join(__dirname, 'windows-ocr-recognize.ps1');
 // Mac' own OCR engine
 const MAC_SCRIPT_PATH = app.isPackaged
   ? path.join(process.resourcesPath, 'macos-ocr-recognize.sh')

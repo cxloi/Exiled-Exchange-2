@@ -18,6 +18,9 @@ win:
   target:
     - "nsis"
     - "portable"
+  extraResources:
+    - from: src/vision/windows-ocr-recognize.ps1
+      to: windows-ocr-recognize.ps1
 linux:
   target:
     - "AppImage"
