@@ -280,6 +280,19 @@
     "toggle_key": "開始和暫停",
     "reset_key": "重置"
   },
+  "expedition_check": {
+    "name": "探險符形查價",
+    "scan_key": "掃描符形組合",
+    "no_region": "尚未設置截取區域 - 請打開設置進行配置",
+    "no_data": "尚未識別到獎勵",
+    "region_notice": "拖動綠色方框來調整位置，完成後點擊保存",
+    "show_raw_ocr": "顯示原始 OCR 文本原始 - 調試",
+    "color_code_values": "按照價格高低著色 綠 > 黃 > 紅",
+    "uncap_name_width": "顯示完整名稱",
+    "exalted": "崇高",
+    "chaos": "混沌",
+    "div": "神聖"
+  },
   "stash_search": {
     "enable_keys": "按鍵",
     "name": "倉庫搜尋",

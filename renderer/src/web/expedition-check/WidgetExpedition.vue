@@ -161,7 +161,7 @@ const containerWidth = computed(() => {
     const len = `${r.quantity}x ${r.displayName}`.length + r.priceText.length;
     return Math.max(max, len);
   }, 20);
-  return `${longest + 6}ch`;
+  return `${longest + 16}ch`;
 });
 
 function rowStyle(row: DisplayRow) {
@@ -274,11 +274,24 @@ function buildRows(sourceRows: RawRow[]): DisplayRow[] {
 
     let priceText = "?";
     let totalValue: number | null = null;
+    let valueTier: DisplayRow["valueTier"] = null;
     if (lookupKey) {
       const resolved = resolvePrice(lookupKey, priceIndex);
       if (resolved) {
         totalValue = resolved.entry.primaryValue * parsed.quantity;
-        priceText = formatPrice(resolved.entry.primaryValue, parsed.quantity);
+        let priceMeta = formatPrice(resolved.entry.primaryValue, parsed.quantity);
+        priceText = `${priceMeta.val} ${priceMeta.currT}`;
+        switch(priceMeta.curr){
+          case "div":
+            valueTier = "high"
+            break;
+          case "chaos":
+            valueTier = "mid"
+            break;
+          case "exalted":
+            valueTier = "low"
+            break;
+        }
       }
     }
     out.push({
@@ -288,46 +301,28 @@ function buildRows(sourceRows: RawRow[]): DisplayRow[] {
       y: raw.y,
       height: raw.height,
       totalValue,
-      valueTier: null, // filled in below, once every row's totalValue is known
+      valueTier
     });
   }
 
-  assignValueTiers(out);
   return out;
 }
 
-// Ranks by total value among this poll's own resolved rows - relative, not an
-// absolute currency cutoff, so it stays meaningful as the league's economy
-// drifts over time without ever needing retuning, and it directly answers the
-// actual decision under a timer: "which of these specific options is best,"
-// not "is this above some number picked three leagues ago." The highest value
-// is tiered "high" and the lowest "low" even when only one resolved row exists
-// (or every resolved row ties) - "this is the best available" is still a true,
-// non-misleading statement with only one option, so there's no separate
-// "can't compare" state to design for.
-function assignValueTiers(rows: DisplayRow[]): void {
-  const values = rows
-    .map((r) => r.totalValue)
-    .filter((v): v is number => v !== null);
-  if (values.length === 0) return;
+type PriceFormatParts = { val: string; curr: string; currT: string };
 
-  const max = Math.max(...values);
-  const min = Math.min(...values);
-  for (const row of rows) {
-    if (row.totalValue === null) continue;
-    row.valueTier = row.totalValue === max ? "high" : row.totalValue === min ? "low" : "mid";
-  }
-}
-
-function formatPrice(primaryValueDivine: number, quantity: number): string {
+function formatPrice(primaryValueDivine: number, quantity: number): PriceFormatParts {
   const currencyValue = autoCurrency(primaryValueDivine * quantity);
-  return `${displayRounding(currencyValue.min, false, true)} ${currencyValue.currency}`;
+  return {
+    val: displayRounding(currencyValue.min, false, true),
+    curr: currencyValue.currency,
+    currT: t(`:${currencyValue.currency}`)
+  };
 }
 
 const VALUE_TIER_CLASS: Record<"high" | "mid" | "low", string> = {
-  high: "text-green-400",
-  mid: "text-yellow-400",
-  low: "text-red-400",
+  high: "rounded-sm bg-white text-red-500 px-1.5",
+  mid: "rounded-sm bg-orange-500 text-[#1a1005] px-1.5",
+  low: "rounded-sm bg-orange-500 text-[#1a1005] px-1.5",
 };
 
 function priceColorClass(row: DisplayRow): string {
@@ -373,12 +368,12 @@ const rows = computed<DisplayRow[]>(() => buildRows(rawRows.value));
 //         "height": 0.029078014184397157
 //     },
 //     {
-//         "text": "未切割的技能寶石（等級 20）",
+//         "text": "未切割的技能寶石（等級 18）",
 //         "y": 0.28592195868400916,
 //         "height": 0.02754399387911247
 //     },
 //     {
-//         "text": "未切割的精魂寶石 （等級   20  ） ",
+//         "text": "精魂寶石",
 //         "y": 0.509946442234124,
 //         "height": 0.030604437643458302
 //     },

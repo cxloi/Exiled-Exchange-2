@@ -292,7 +292,10 @@
     "region_notice": "Drag the green box (shown over the game while this is open) to position it, or enter exact fractions of the game window below. Click Save when done.",
     "show_raw_ocr": "Show raw OCR text (debug)",
     "color_code_values": "Color-code prices by rank (green = highest, red = lowest)",
-    "uncap_name_width": "Show full names (uncapped width, for debugging misreads)"
+    "uncap_name_width": "Show full names (uncapped width, for debugging misreads)",
+    "exalted": "exalted",
+    "chaos": "chaos",
+    "div": "div"
   },
   "notepad": {
     "name": "Notepad",
