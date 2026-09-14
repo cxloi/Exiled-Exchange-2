@@ -26,7 +26,10 @@ export interface ShortcutAction {
       }
     | {
         type: "ocr-text";
-        target: "heist-gems";
+        target: "heist-gems" | "expedition-price";
+        // Capture rectangle as fractions (0..1) of the game window, only meaningful
+        // for target "expedition-price" (a user-calibrated, fixed panel location).
+        region?: { x: number; y: number; width: number; height: number };
       }
     | {
         type: "trigger-event";
@@ -82,6 +85,7 @@ export type IpcEvent =
   | IpcOverlayRenderState
   | IpcHideExclusiveWidget
   | IpcTrackArea
+  | IpcRequestOcr
   // events used by any type of Client:
   | IpcSaveConfig
   | IpcUpdaterState
@@ -142,6 +146,17 @@ type IpcTrackArea = Event<
   }
 >;
 
+// Renderer-initiated, on-demand OCR request (used by continuous-polling widgets, as
+// opposed to the hotkey-driven path in `ShortcutAction`'s "ocr-text" action). The main
+// process answers with the same "MAIN->CLIENT::ocr-text" event either way.
+type IpcRequestOcr = Event<
+  "CLIENT->MAIN::request-ocr",
+  {
+    target: string;
+    region: { x: number; y: number; width: number; height: number };
+  }
+>;
+
 type IpcHostConfig = Event<"CLIENT->MAIN::update-host-config", HostConfig>;
 
 type IpcClientIsActive = Event<
@@ -198,6 +213,12 @@ type IpcOcrText = Event<
     pressTime: number;
     ocrTime: number;
     paragraphs: string[];
+    // Per-line vertical position within the captured region, as fractions (0-1)
+    // of the region's height. Only meaningful for target "expedition-price" -
+    // lets that widget position each price next to its actual row in the game
+    // panel instead of in a separate stacked list. Optional so "heist-gems"
+    // consumers (which only ever read `paragraphs`) don't need to change.
+    rows?: { text: string; y: number; height: number }[];
   }
 >;
 
