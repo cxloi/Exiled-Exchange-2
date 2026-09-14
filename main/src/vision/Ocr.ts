@@ -1,5 +1,5 @@
 import { execFile } from "child_process";
-import { nativeImage } from "electron";
+import { nativeImage, app } from "electron";
 import { promises as fs } from "fs";
 import * as os from "os";
 import * as path from "path";
@@ -56,7 +56,9 @@ interface OcrResponse {
 // keep off Electron's main thread.
 const WIN_SCRIPT_PATH = path.join(__dirname, "windows-ocr-recognize.ps1");
 // Mac' own OCR engine
-const MAC_SCRIPT_PATH = path.join(__dirname, "macos-ocr-recognize.sh");
+const MAC_SCRIPT_PATH = app.isPackaged
+  ? path.join(process.resourcesPath, 'macos-ocr-recognize.sh')
+  : path.join(__dirname, 'macos-ocr-recognize.sh')
 
 // Observed consistently across every real test capture: Windows/Mac recognizer
 // substitutes look-alike letters for the digits "1" and "0" specifically in the
