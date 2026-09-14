@@ -3,8 +3,8 @@
 // whose regexes were tuned against real OCR output from this exact panel - see the regex
 // comments below for what each one is compensating for.
 
-const NON_WORD_SPACE = /[^\w\s]/g;
-const MULTI_SPACE = /\s+/g;
+const NON_WORD_SPACE = /[^\p{L}\p{N}_\s]/gu;
+const MULTI_SPACE = /\s+/gu;
 
 // leading "Nx" quantity marker; "6x5" (digit right after) is deliberately excluded so a
 // misread stack-count-of-a-stack-count doesn't get parsed as the multiplier.
@@ -26,8 +26,8 @@ const TRAILING_STACK_COUNT = /\s*[([{]\s*[\p{L}\p{N}]{1,3}\s*[)\]}]\s*$/u;
 // Trailing bare "x1" (and OCR's letter-for-digit confusions on it: xl, xI, xO, xS, xB).
 const TRAILING_BARE_STACK_COUNT = /\s+x[\dlioOSB]{1,3}\s*$/i;
 
-const MIN_NAME_LENGTH = 4;
-const MIN_WORD_LENGTH = 4;
+const MIN_NAME_LENGTH = 3;
+const MIN_WORD_LENGTH = 3;
 
 export function normalize(text: string): string {
   return text
@@ -99,8 +99,13 @@ export function parseLine(raw: string): ParsedRow | null {
   return { quantity, name, explicitQuantity };
 }
 
+export function slug(raw: string): string {
+  return raw.toLowerCase().replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
+}
+
 const GEM_TYPE_PATTERN = /\b(skill|spirit|support)\b/;
 const GEM_LEVEL_PATTERN = /\blevel\s+(\d+)\b/;
+const TW_GEM_PATTERN = /^\s*未切割的(.+?)寶石\s*[（(]\s*等級\s*(\d{1,2})\s*[)）]\s*$/mu;
 
 export type GemResolution =
   | { isGemRow: false }
@@ -120,4 +125,31 @@ export function resolveGemKey(normalizedName: string): GemResolution {
   if (!level) return { isGemRow: true, key: null };
 
   return { isGemRow: true, key: `uncut ${type[1]} gem level ${level[1]}` };
+}
+
+export function resolveTwGemKey(gemName: string): string {
+  if (gemName.includes("gem")){
+    let gemResolve = resolveGemKey(gemName);
+    return gemResolve.isGemRow ? (gemResolve.key ?? '') : '';
+  }
+
+  const res = gemName.match(TW_GEM_PATTERN);
+  if (!res) return "";
+
+  let type;
+  switch(res[1]){
+    case '技能':
+      type = 'skill';
+      break;
+    case '精魂':
+      type = 'spirit';
+      break;
+    case '輔助':
+      type = 'support';
+      break;
+    default:
+      break;
+  }
+
+  return `uncut ${type} gem level ${res[2]}`;
 }

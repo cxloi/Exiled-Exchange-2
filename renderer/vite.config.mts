@@ -2,6 +2,19 @@ import path from "path";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
+function logForward(): Plugin {
+  return {
+    name: 'log-forward',
+    apply: 'serve',
+    configureServer(server) {
+      server.ws.on('client:log', ({ level, args }) => {
+        const fn = (console as any)[level] ?? console.log
+        fn('[browser]', ...args)
+      })
+    },
+  }
+}
+
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
@@ -20,6 +33,7 @@ export default defineConfig({
         },
       },
     }),
+    logForward()
   ],
   resolve: {
     alias: {

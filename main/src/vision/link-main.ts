@@ -3,7 +3,7 @@ import * as Comlink from "comlink";
 import nodeEndpoint from "comlink/dist/umd/node-adapter";
 import type { WorkerAPI } from "./link-worker";
 import type { FractionRect, ImageData } from "./utils";
-import * as WindowsOcr from "./WindowsOcr";
+import * as Ocr from "./Ocr";
 import { app } from "electron";
 import path from "path";
 
@@ -47,6 +47,6 @@ export class OcrWorker {
   // comment in link-worker.ts for why: this doesn't touch the WASM engine that
   // worker exists to isolate, so there's nothing to gain from the round-trip.
   async ocrExpeditionPanel(image: ImageData, rect: FractionRect) {
-    return await WindowsOcr.ocrExpeditionPanel(image, rect);
+    return await Ocr.ocrExpeditionPanel(image, rect);
   }
 }

@@ -1,6 +1,6 @@
 # Bridges to Windows' own OCR engine (Windows.Media.Ocr - the same engine behind
 # PowerToys' Text Extractor and Snipping Tool's text actions). There is no Node/
-# Electron API for this; WindowsOcr.ts spawns this script per call as the only way
+# Electron API for this; Ocr.ts spawns this script per call as the only way
 # to reach it. Ported unchanged from ocr-playground/winocr/recognize.ps1, where it
 # was validated interactively against real captures before porting - see that
 # project's README ("Windows OCR (native)" section) for what was observed.
@@ -42,7 +42,7 @@ try {
 
     # OcrEngine.RecognizeAsync only accepts Gray8/Nv12/Bgra8 pixel format with
     # Premultiplied-or-Ignore alpha - normalize unconditionally rather than assume
-    # the PNG WindowsOcr.ts wrote decodes to exactly that.
+    # the PNG Ocr.ts wrote decodes to exactly that.
     $needsConvert = $bitmap.BitmapPixelFormat -ne [Windows.Graphics.Imaging.BitmapPixelFormat]::Bgra8 `
         -or $bitmap.BitmapAlphaMode -eq [Windows.Graphics.Imaging.BitmapAlphaMode]::Straight
     if ($needsConvert) {

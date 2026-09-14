@@ -1,5 +1,6 @@
 <template>
   <Widget :config="config" move-handles="corners" :inline-edit="false">
+    <!-- <div>{{ rowsString }}</div> -->
     <div :style="{ width: containerWidth }">
       <div v-if="!config.region" class="widget-default-style p-3 text-gray-100 text-lg text-gray-500">
         {{ t(":no_region") }}
@@ -61,9 +62,10 @@ import { displayRounding, usePoeninja } from "@/web/background/Prices";
 import type { WidgetManager } from "../overlay/interfaces";
 import type { ExpeditionWidget } from "../overlay/widgets";
 import Widget from "../overlay/Widget.vue";
-import { parseLine, resolveGemKey } from "./parsing";
+import { parseLine, slug, resolveTwGemKey } from "./parsing";
 import { buildPriceIndex, resolvePrice } from "./price-match";
 import { DEFAULT_REGION } from "./region";
+import { ITEM_BY_TRANSLATED } from "@/assets/data";
 
 // Only the categories that can actually appear as Runeshape Combinations costs -
 // matches PoeAncientsPriceHelper's own curated list, avoiding false fuzzy matches
@@ -260,8 +262,15 @@ function buildRows(sourceRows: RawRow[]): DisplayRow[] {
     const parsed = parseLine(raw.text);
     if (!parsed) continue;
 
-    const gem = resolveGemKey(parsed.name);
-    const lookupKey = gem.isGemRow ? gem.key : parsed.name;
+    let translatedParsedName;
+    if (parsed.name.includes("uncut") || parsed.name.includes("未切割的")) {
+      translatedParsedName = resolveTwGemKey(raw.text);
+    } else {
+      translatedParsedName = slug(
+        ITEM_BY_TRANSLATED("ITEM", parsed.name)?.[0]?.refName || ""
+      );
+    }
+    const lookupKey = translatedParsedName;
 
     let priceText = "?";
     let totalValue: number | null = null;
@@ -357,4 +366,22 @@ Host.onEvent("MAIN->CLIENT::ocr-text", (e) => {
 // empty, pre-fetch) data forever. Tying it to `rawRows` instead means it's rebuilt
 // exactly when there's new OCR output to price anyway - cheap, for ~100 entries.
 const rows = computed<DisplayRow[]>(() => buildRows(rawRows.value));
+// const rows = computed<DisplayRow[]>(() => buildRows([
+//     {
+//         "text": "阿德爾的傳承",
+//         "y": 0.05319148936170213,
+//         "height": 0.029078014184397157
+//     },
+//     {
+//         "text": "未切割的技能寶石（等級 20）",
+//         "y": 0.28592195868400916,
+//         "height": 0.02754399387911247
+//     },
+//     {
+//         "text": "未切割的精魂寶石 （等級   20  ） ",
+//         "y": 0.509946442234124,
+//         "height": 0.030604437643458302
+//     },
+// ]));
+// const rowsString = computed<String>(() => JSON.stringify(rawRows.value));
 </script>

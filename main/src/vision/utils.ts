@@ -92,7 +92,7 @@ export interface FractionRect {
 // resizes without any separate coordinate conversion. Clamped to the image bounds so a
 // stale calibration (e.g. after resizing the game window) degrades to a smaller/shifted
 // crop instead of throwing.
-export function cropImageFraction(
+export function winCropImageFraction(
   image: ImageData,
   rect: FractionRect,
 ): ImageData {
@@ -111,6 +111,45 @@ export function cropImageFraction(
       image.data.subarray(srcStart, srcStart + width * bytesPerPixel),
       destStart,
     );
+  }
+  return { width, height, data: out };
+}
+
+type MacBufferLike = Uint8Array | Buffer | number[] | { data: number[] };
+
+function macToBytes(d: MacBufferLike): Uint8Array {
+  if (ArrayBuffer.isView(d)) {
+    return new Uint8Array(d.buffer, d.byteOffset, d.byteLength);
+  }
+  if (Array.isArray(d)) return Uint8Array.from(d);
+  if (Array.isArray((d as any)?.data)) return Uint8Array.from((d as any).data);
+
+  throw new TypeError(`unsupported image data: ${Object.prototype.toString.call(d)}`);
+}
+
+export function macCropImageFraction(
+  image: { width: number; height: number; data: MacBufferLike },
+  rect: FractionRect,
+): ImageData {
+
+  const src = macToBytes(image.data);
+  const bytesPerPixel = src.length / (image.width * image.height);
+
+  if (!Number.isInteger(bytesPerPixel)) {
+    throw new Error(
+      `stride mismatch: ${src.length} bytes for ${image.width}x${image.height}`,
+    );
+  }
+
+  const x = Math.min(Math.max(Math.round(rect.x * image.width), 0), image.width - 1);
+  const y = Math.min(Math.max(Math.round(rect.y * image.height), 0), image.height - 1);
+  const width = Math.max(Math.min(Math.round(rect.width * image.width), image.width - x), 0);
+  const height = Math.max(Math.min(Math.round(rect.height * image.height), image.height - y), 0);
+
+  const out = new Uint8Array(width * height * bytesPerPixel);
+  for (let row = 0; row < height; row++) {
+    const srcStart = ((y + row) * image.width + x) * bytesPerPixel;
+    out.set(src.subarray(srcStart, srcStart + width * bytesPerPixel), row * width * bytesPerPixel);
   }
   return { width, height, data: out };
 }

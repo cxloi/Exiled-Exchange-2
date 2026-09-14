@@ -26,10 +26,11 @@ const visionBuild = await esbuild.build({
   outfile: 'dist/vision.js'
 })
 
-// Not JS - esbuild's bundler doesn't touch it, but WindowsOcr.ts locates it via
+// Not JS - esbuild's bundler doesn't touch it, but Ocr.ts locates it via
 // __dirname at runtime (same convention link-main.ts uses for vision.js above), so
 // it needs to sit next to the compiled output rather than just live in src/.
 fs.copyFileSync('src/vision/windows-ocr-recognize.ps1', 'dist/windows-ocr-recognize.ps1')
+fs.copyFileSync('src/vision/macos-ocr-recognize.sh', 'dist/macos-ocr-recognize.sh')
 
 const mainContext = await esbuild.context({
   entryPoints: ['src/main.ts'],

@@ -25,7 +25,7 @@ column, never wraps) and does not solve the layout problem described below.
 ## Architecture at a glance
 
 **Main process** (screenshot → OCR, no game/price knowledge):
-- `main/src/vision/WindowsOcr.ts` — crops the calibrated region (`cropImageFraction`,
+- `main/src/vision/Ocr.ts` — crops the calibrated region (`cropImageFraction`,
   pure JS, no OpenCV involved), encodes it to PNG via Electron's `nativeImage`, and
   spawns `windows-ocr-recognize.ps1` (a PowerShell/WinRT bridge to
   `Windows.Media.Ocr` — there's no Node/Electron API for it) to get back text lines.
@@ -33,10 +33,10 @@ column, never wraps) and does not solve the layout problem described below.
   (`main/src/vision/link-worker.ts`/`link-main.ts`): that worker exists to isolate
   OpenCV.js/Tesseract.js's heavy *synchronous* WASM computation off the main thread,
   and this has none — spawning a subprocess is already async. `link-main.ts`'s
-  `OcrWorker.ocrExpeditionPanel()` calls straight into `WindowsOcr.ts`.
+  `OcrWorker.ocrExpeditionPanel()` calls straight into `Ocr.ts`.
 - `main/build/script.mjs` copies `windows-ocr-recognize.ps1` next to the compiled
   output after each build (esbuild's bundler doesn't touch non-JS files) —
-  `WindowsOcr.ts` locates it via `__dirname` at runtime, same convention
+  `Ocr.ts` locates it via `__dirname` at runtime, same convention
   `link-main.ts` already used for `vision.js`.
 - `main/src/shortcuts/Shortcuts.ts` — `runOcrAndReply()` is the single entry point,
   called from two places: the hotkey-driven `ShortcutAction` branch, and a
@@ -112,7 +112,7 @@ which the current engine doesn't use.
 Windows' recognizer consistently reads the digits `1` and `0` as the look-alike
 letters `I`/`O`, specifically in the leading quantity-prefix token — `"1x"` comes back
 as `"IX"`, `"10x"` as `"IOX"` — never elsewhere in a line, and never for other digits
-(`2x`, `3x`, `5x` etc. read correctly). `WindowsOcr.ts`'s `normalizeQuantityPrefix()`
+(`2x`, `3x`, `5x` etc. read correctly). `Ocr.ts`'s `normalizeQuantityPrefix()`
 fixes this with a line-start-anchored regex before any line reaches the renderer's
 `parsing.ts`. This matters more than it might look: `parsing.ts`'s
 `MULTIPLIER_PATTERN` requires actual digits, so without this fix a real `"10x"` reward
@@ -193,7 +193,7 @@ plan, including why the obvious CORS blocker isn't actually one.
 
 ```
 ipc/types.ts                                       IPC contract (ShortcutAction, request-ocr event)
-main/src/vision/WindowsOcr.ts                       crop -> PNG -> Windows.Media.Ocr bridge
+main/src/vision/Ocr.ts                       crop -> PNG -> Windows.Media.Ocr bridge
 main/src/vision/windows-ocr-recognize.ps1           the PowerShell/WinRT bridge script itself
 main/src/vision/link-main.ts                        OcrWorker.ocrExpeditionPanel (calls WindowsOcr directly)
 main/src/vision/utils.ts                            cropImageFraction

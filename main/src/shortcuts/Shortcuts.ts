@@ -279,7 +279,7 @@ export class Shortcuts {
 
             const { action } = entry;
             const pressTime = Date.now();
-            const imageData = this.poeWindow.screenshot();
+            const imageData = this.poeWindow.winScreenshot();
             this.ocrWorker
               .findHeistGems({
                 width: this.poeWindow.bounds.width,
@@ -343,22 +343,24 @@ export class Shortcuts {
     region: { x: number; y: number; width: number; height: number },
     pressTime: number,
   ) {
-    if (process.platform !== "win32") {
-      this.logger.write(
-        `error [Shortcuts] expedition OCR requires Windows (platform: ${process.platform}).`,
-      );
-      return;
-    }
-
     try {
-      const imageData = this.poeWindow.screenshot();
+      let imageInput;
+      if (process.platform == "win32") {
+        imageInput = {
+          width: this.poeWindow.bounds.width,
+          height: this.poeWindow.bounds.height,
+          data: this.poeWindow.winScreenshot(),
+        };
+      }
+      if (process.platform == "darwin") {
+        imageInput = {
+          ...this.poeWindow.macScreenshot()
+        };
+      }
+      if (!imageInput) return;
       this.ocrWorker
         .ocrExpeditionPanel(
-          {
-            width: this.poeWindow.bounds.width,
-            height: this.poeWindow.bounds.height,
-            data: imageData,
-          },
+          imageInput,
           region,
         )
         .then((result) => {
