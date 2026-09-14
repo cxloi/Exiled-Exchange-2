@@ -7,7 +7,7 @@
       </div>
       <div
         v-else-if="rows.length === 0"
-        class="widget-default-style p-3 text-gray-100 text-lg text-gray-500"
+        class="widget-default-style p-3 text-gray-100 text-lg text-gray-500 opacity-40"
       >
         {{ t(":no_data") }}
       </div>
