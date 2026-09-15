@@ -55,6 +55,14 @@ export interface DropEntry {
   items: string[];
 }
 
+export interface EnLangEntry {
+  refName: string;
+  namespace: string;
+  unique?: {
+    base?: string;
+  }
+}
+
 export interface BaseType {
   name: string;
   refName: string;

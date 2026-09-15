@@ -48,25 +48,31 @@
 </template>
 
 <script lang="ts">
+import { EnLangEntry } from "../../../src/assets/data/interfaces";
 import { defineComponent, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import DndContainer from "vuedraggable";
 import { configProp, configModelValue } from "../settings/utils.js";
 import type { PriceTrackWidget } from "./widget.js";
-import { BaseType, ITEM_DROP, ITEM_BY_REF } from "@/assets/data";
-
-interface Entry {
-  query: string[];
-  items: string[];
-}
+import { BaseType, ITEM_EN_LANG, ITEM_BY_REF } from "@/assets/data";
 
 interface DropdownEntry {
   label: string;
   value: string;
 }
 
-function flatten(data: Entry[]): string[] {
-  return [...new Set(data.flatMap(e => [...e.query, ...e.items]))];
+function flatten(data: EnLangEntry[]): string[] {
+  return [
+    ...new Set(
+      data
+        .filter(item => item.namespace !== 'GEM')
+        .filter(item => !item.unique?.base?.includes("Runemastered"))
+        .map(item =>
+          `${item.namespace}::${item.refName}` +
+          (item.unique?.base ? ` // ${item.unique.base}` : '')
+        )
+    ),
+  ];
 }
 
 export default defineComponent({
@@ -95,13 +101,11 @@ export default defineComponent({
       searches
     };
   },
-  methods: {
-    translatedList(id: number): DropdownEntry[] {
-      const q = (this.searches[id] ?? '').trim().toLowerCase();
-
-      let flatLs = flatten(ITEM_DROP);
+  computed: {
+    flatLs(): DropdownEntry[]{
+      let allItems: string[] = flatten(ITEM_EN_LANG);
       let filterLs: DropdownEntry[] = [];
-      flatLs.forEach(itemId => {
+      allItems.forEach(itemId => {
         if (!itemId) return;
         const [ns, encodedName] = itemId.split("::");
         const [refName, variant] = encodedName.split(" // ");
@@ -111,18 +115,22 @@ export default defineComponent({
           value: itemId 
         });
       })
+      return filterLs.filter(o => o.label !== "");
+    }
+  },
+  methods: {
+    translatedList(id: number): DropdownEntry[] {
+      const q = (this.searches[id] ?? '').trim().toLowerCase();
       
-      filterLs.filter(o => o.label !== "")
-
       return q 
-        ? filterLs.filter(o => {
+        ? this.flatLs.filter(o => {
             if (q) {
               return o.label.toLowerCase().includes(q) || o.value.toLowerCase().includes(q)
             } else {
               return true;
             }
           })
-        : filterLs;
+        : this.flatLs;
     },
   }
 });
