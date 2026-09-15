@@ -20,7 +20,7 @@ A simple modification on existing StashSearch widget
 Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Exchange-2-Expedition-Checker) project, thanks to his implementation on Windows's OCR. Support zh-Hans translation in expedition widget.
 
 ### Mac Port
-1. added mac port of OCR, using macOS native engine, currently set to ocr zh-Hans,en-US
+1. added mac port of OCR, using macOS native engine, currently set to ocr zh-Hans,en-US at the same time
 ![Ocr Mac Port](./renderer/public/images/expedition-macPort.png)
 2. to build dmg
   - `sh testUpdate.sh`
@@ -31,14 +31,14 @@ Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Excha
   - restart the app
 
 ### Win Port
-1. modified win port of OCR to support zh-Hans, limitation on Windows OCR: only one language per call, no mixed zh+en pass, so the lang is pass from 
+1. modified win port of OCR to support zh-Hans, limitation on Windows OCR: only one language per call, no mixed zh+en pass, so the lang is pass from app language config
 ![Ocr Win Port](./renderer/public/images/expedition-winPort.png)
 2. install extra language OCR
   - open powershell with admin rights
   - `Add-WindowsCapability -Online -Name "Language.OCR~~~zh-TW~0.0.1.0"` and restart
-  - set ExiledExchange2 in zh-Hans, currently support zh-Hans,en-US mapping
+  - configure ExiledExchange2 language, support zh-Hans,en-US mapping
 3. to build exe
-  - [DEVELOPING.md](./DEVELOPING.md#how-to-build)
+  - run build instruction from [DEVELOPING.md](./DEVELOPING.md#how-to-build)
   - open powershell with admin rights
   - cd to main/
   - `npx electron-builder --win --x64`
