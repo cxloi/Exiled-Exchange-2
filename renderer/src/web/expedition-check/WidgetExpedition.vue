@@ -262,21 +262,25 @@ function buildRows(sourceRows: RawRow[]): DisplayRow[] {
     const parsed = parseLine(raw.text);
     if (!parsed) continue;
 
-    let translatedParsedName;
-    if (parsed.name.includes("uncut") || parsed.name.includes("未切割的")) {
-      translatedParsedName = resolveTwGemKey(raw.text);
-    } else {
-      translatedParsedName = slug(
-        ITEM_BY_TRANSLATED("ITEM", parsed.name)?.[0]?.refName || ""
-      );
-    }
-    const lookupKey = translatedParsedName;
+    const lookupKey = parsed.name;
 
     let priceText = "?";
     let totalValue: number | null = null;
     let valueTier: DisplayRow["valueTier"] = null;
     if (lookupKey) {
-      const resolved = resolvePrice(lookupKey, priceIndex);
+      let resolved = resolvePrice(lookupKey, priceIndex);
+      if (!resolved) {
+        let translatedParsedName;
+        if (parsed.name.includes("uncut") || parsed.name.includes("未切割的")) {
+          translatedParsedName = resolveTwGemKey(raw.text);
+        } else {
+          translatedParsedName = slug(
+            ITEM_BY_TRANSLATED("ITEM", parsed.name)?.[0]?.refName || ""
+          );
+        }
+        resolved = resolvePrice(translatedParsedName, priceIndex);
+      }
+      
       if (resolved) {
         totalValue = resolved.entry.primaryValue * parsed.quantity;
         let priceMeta = formatPrice(resolved.entry.primaryValue, parsed.quantity);
