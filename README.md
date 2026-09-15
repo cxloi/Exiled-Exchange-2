@@ -22,7 +22,9 @@ Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Excha
 ### Mac Port
 1. added mac port of OCR, using macOS native engine, currently set to ocr zh-Hans,en-US
 ![Ocr Mac Port](./renderer/public/images/expedition-macPort.png)
-2. grant accessibility + screen recording
+2. to build dmg
+  - `sh testUpdate.sh`
+3. grant accessibility + screen recording
   - remove the permission entries
   - re-sign `codesign --force --deep --sign - /Applications/Exiled\ Exchange\ 2.app`
   - kill the app and grant both
@@ -35,6 +37,11 @@ Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Excha
   - open powershell with admin rights
   - `Add-WindowsCapability -Online -Name "Language.OCR~~~zh-TW~0.0.1.0"` and restart
   - set ExiledExchange2 in zh-Hans, currently support zh-Hans,en-US mapping
+3. to build exe
+  - [DEVELOPING.md](./DEVELOPING.md#how-to-build)
+  - open powershell with admin rights
+  - cd to main/
+  - `npx electron-builder --win --x64`
 
 ## *Below all from upstream
 **This is a personal fork of [Kvan7/Exiled-Exchange-2](https://github.com/Kvan7/Exiled-Exchange-2),
