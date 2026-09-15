@@ -6,7 +6,7 @@
 ## 1. Price Track Widget
 Create a new price track widget to always show price based on available currency data.
 
-1. add price track widget
+1. add price track widget from widget list
 ![Price Track Widget](./renderer/public/images/priceTrack-widget.png)
 2. edit entry, the search input will filter each drop options, select to track it, filter support both translated text or key(english)
 ![Price Track Search](./renderer/public/images/priceTrack-search.png)
