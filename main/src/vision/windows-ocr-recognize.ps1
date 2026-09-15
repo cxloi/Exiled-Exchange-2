@@ -10,7 +10,8 @@
 # elapsedMs, engineLanguage, imageWidth, imageHeight} on success, or {ok:false, error} on failure.
 
 param(
-    [Parameter(Mandatory = $true)][string]$ImagePath
+    [Parameter(Mandatory = $true)][string]$ImagePath,
+    [string]$Language
 )
 
 $ErrorActionPreference = "Stop"
@@ -34,6 +35,14 @@ function Await($WinRtTask, $ResultType) {
     $task.Result
 }
 
+[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false)
+
+$cjk = '[\p{IsCJKUnifiedIdeographs}\p{IsCJKSymbolsandPunctuation}\p{IsHalfwidthandFullwidthForms}]'
+function Join-Cjk([string]$s) {
+    if ([string]::IsNullOrEmpty($s)) { return $s }
+    [regex]::Replace($s, "(?<=$script:cjk)[ ]+(?=$script:cjk)", '')
+}
+
 try {
     $file = Await ([Windows.Storage.StorageFile]::GetFileFromPathAsync($ImagePath)) ([Windows.Storage.StorageFile])
     $stream = Await ($file.OpenAsync([Windows.Storage.FileAccessMode]::Read)) ([Windows.Storage.Streams.IRandomAccessStream])
@@ -52,10 +61,30 @@ try {
             [Windows.Graphics.Imaging.BitmapAlphaMode]::Premultiplied)
     }
 
-    $engine = [Windows.Media.Ocr.OcrEngine]::TryCreateFromUserProfileLanguages()
-    if ($null -eq $engine) {
-        throw "No OCR engine available for any installed user-profile language. Install an OCR language pack: Settings > Time & language > Language & region > (your language) > Language options > Optical character recognition."
-    }
+    if ($Language) {
+        # 1. let WinRT normalize the tag (zh-TW -> zh-Hant-TW)
+        $engine = $null
+        try { $engine = [Windows.Media.Ocr.OcrEngine]::TryCreateFromLanguage(
+                [Windows.Globalization.Language]::new($Language)) } catch { }
+
+        # 2. fall back: match on tag prefix, case-insensitive
+        if ($null -eq $engine) {
+            $avail = [Windows.Media.Ocr.OcrEngine]::AvailableRecognizerLanguages
+            $lang  = $avail | Where-Object { $_.LanguageTag -ieq $Language } |
+                    Select-Object -First 1
+            if ($null -eq $lang) {
+            $lang = $avail | Where-Object {
+                $_.LanguageTag -ilike "$Language-*" -or $Language -ilike "$($_.LanguageTag)-*"
+            } | Select-Object -First 1
+            }
+            if ($lang) { $engine = [Windows.Media.Ocr.OcrEngine]::TryCreateFromLanguage($lang) }
+        }
+
+        if ($null -eq $engine) {
+            throw "No OCR engine for '$Language'. Available: " +
+            (($avail | ForEach-Object { $_.LanguageTag }) -join ', ')
+        }
+        }
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $result = Await ($engine.RecognizeAsync($bitmap)) ([Windows.Media.Ocr.OcrResult])
@@ -74,15 +103,16 @@ try {
                 height = [math]::Round($r.Height, 1)
             }
         }
-        $lines += [ordered]@{ text = $line.Text; words = $words }
+        $lines += [ordered]@{ text = (Join-Cjk $line.Text); words = $words }
     }
 
     $output = [ordered]@{
         ok             = $true
-        text           = $result.Text
+        text           = (Join-Cjk $result.Text)
         lines          = $lines
         elapsedMs      = $sw.ElapsedMilliseconds
-        engineLanguage = $engine.RecognizerLanguage.DisplayName
+        engineLanguage = $engine.RecognizerLanguage.LanguageTag
+        engineLanguageName = $engine.RecognizerLanguage.DisplayName
         imageWidth     = $bitmap.PixelWidth
         imageHeight    = $bitmap.PixelHeight
     }

@@ -1,10 +1,5 @@
-# ![Perfect Jewelers Orb](./renderer/public/images/jeweler.png) Exiled Exchange 2 (personal fork)
+# ![Perfect Jewelers Orb](./renderer/public/images/jeweler.png) Exiled Exchange 2
 
-**This is a personal fork of [Kvan7/Exiled-Exchange-2](https://github.com/Kvan7/Exiled-Exchange-2),
-customized for my own use** — notably an added Expedition Price Check widget
-(see [EXPEDITION_CHECK.md](./EXPEDITION_CHECK.md)) that OCRs the Path of
-Exile 2 Expedition "Runeshape Combinations" reward panel and shows a live
-poe.ninja price next to each reward row, right in the game window:
 
 <b>== THIS IS A FORK FOR MY OWN GAMING NEEDS ==</b> 
 
@@ -22,11 +17,31 @@ A simple modification on existing StashSearch widget
 ![Build Equip List](./renderer/public/images/buildEquip-list.png)
 
 ## 2. Expedition Price Check
-Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Exchange-2-Expedition-Checker) project, thanks to his implementation on Windows's OCR.
+Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Exchange-2-Expedition-Checker) project, thanks to his implementation on Windows's OCR. Support zh-Hans translation in expedition widget.
 
-1. add mac port of OCR
-![Build Equip List](./renderer/public/images/expedition-macPort.png)
-2. add chinese translation to expedition widget
+### Mac Port
+1. added mac port of OCR, using macOS native engine, currently set to ocr zh-Hans,en-US
+![Ocr Mac Port](./renderer/public/images/expedition-macPort.png)
+2. grant accessibility + screen recording
+  - remove the permission entries
+  - re-sign `codesign --force --deep --sign - /Applications/Exiled\ Exchange\ 2.app`
+  - kill the app and grant both
+  - restart the app
+
+### Win Port
+1. modified win port of OCR to support zh-Hans, limitation on Windows OCR: only one language per call, no mixed zh+en pass, so the lang is pass from 
+![Ocr Win Port](./renderer/public/images/expedition-winPort.png)
+2. install extra language OCR
+  - open powershell with admin rights
+  - `Add-WindowsCapability -Online -Name "Language.OCR~~~zh-TW~0.0.1.0"` and restart
+  - set ExiledExchange2 in zh-Hans, currently support zh-Hans,en-US mapping
+
+## *Below all from upstream
+**This is a personal fork of [Kvan7/Exiled-Exchange-2](https://github.com/Kvan7/Exiled-Exchange-2),
+customized for my own use** — notably an added Expedition Price Check widget
+(see [EXPEDITION_CHECK.md](./EXPEDITION_CHECK.md)) that OCRs the Path of
+Exile 2 Expedition "Runeshape Combinations" reward panel and shows a live
+poe.ninja price next to each reward row, right in the game window:
 
 Path of Exile 2 overlay program for price checking items, among many other loved features.
 | | | |

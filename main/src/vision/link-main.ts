@@ -47,6 +47,6 @@ export class OcrWorker {
   // comment in link-worker.ts for why: this doesn't touch the WASM engine that
   // worker exists to isolate, so there's nothing to gain from the round-trip.
   async ocrExpeditionPanel(image: ImageData, rect: FractionRect) {
-    return await Ocr.ocrExpeditionPanel(image, rect);
+    return await Ocr.ocrExpeditionPanel(image, rect, this.lang);
   }
 }

@@ -62,6 +62,15 @@ const MAC_SCRIPT_PATH = app.isPackaged
   ? path.join(process.resourcesPath, 'macos-ocr-recognize.sh')
   : path.join(__dirname, 'macos-ocr-recognize.sh')
 
+const WINDOWS_LANG_TAGS: Record<string, string> = {
+  en: "en-US",
+  "cmn-Hant": "zh-Hant-TW",
+};
+function toWindowsLangTag(language: string): string | undefined {
+  if (!language) return undefined;
+  return WINDOWS_LANG_TAGS[language];
+}
+
 // Observed consistently across every real test capture: Windows/Mac recognizer
 // substitutes look-alike letters for the digits "1" and "0" specifically in the
 // leading quantity-prefix token ("1x" -> "IX", "10x" -> "IOX"), never elsewhere in
@@ -75,12 +84,22 @@ function normalizeQuantityPrefix(line: string): string {
   );
 }
 
-async function runScript(imagePath: string): Promise<string> {
+async function runScript(imagePath: string, lang?: string): Promise<string> {
   return await new Promise((resolve, reject) => {
     if (process.platform == "win32") {
+      const tag = toWindowsLangTag(lang || '');
+
+      const args = [
+        "-NoProfile",
+        "-ExecutionPolicy", "Bypass",
+        "-File", WIN_SCRIPT_PATH,
+        "-ImagePath", imagePath,
+        ...(tag ? ["-Language", tag] : []),
+      ];
+
       execFile(
         "powershell.exe",
-        ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", WIN_SCRIPT_PATH, imagePath],
+        args,
         // A hung subprocess must not be able to wedge future OCR calls for the rest
         // of the session - this runs unattended for as long as the app is open,
         // unlike the playground's short-lived dev server.
@@ -103,6 +122,7 @@ async function runScript(imagePath: string): Promise<string> {
         // unlike the playground's short-lived dev server.
         {
           maxBuffer: 10 * 1024 * 1024, timeout: 15_000,
+          // env: { ...process.env, OCR_LANGUAGES: 'zh-Hans,de-DE,en-US,es-ES,fr-FR,ja-JP,ko-KR,pt-BR,ru-RU,th-TH' },
           env: { ...process.env, OCR_LANGUAGES: 'zh-Hans,en-US' },
         },
         (err, stdout, stderr) => {
@@ -121,6 +141,7 @@ async function runScript(imagePath: string): Promise<string> {
 export async function ocrExpeditionPanel(
   screenshot: ImageData,
   rect: FractionRect,
+  lang: string
 ): Promise<ExpeditionOcrResult> {
   const start = performance.now();
 
@@ -160,7 +181,7 @@ export async function ocrExpeditionPanel(
 
   try {
     await fs.writeFile(imagePath, pngBuffer);
-    const stdout = await runScript(imagePath);
+    const stdout = await runScript(imagePath, lang);
     const result: OcrResponse = JSON.parse(stdout);
     if (!result.ok) {
       throw new Error(result.error ?? "Unknown error from Native OCR bridge");
