@@ -10,7 +10,7 @@ Create a new price track widget to always show price based on available currency
 ![Price Track Widget](./renderer/public/images/priceTrack-widget.png)
 2. edit entry, the search input will filter each drop options, select to track it, filter support both translated text or key(english)
 ![Price Track Search](./renderer/public/images/priceTrack-search.png)
-3. reuse vue component ItemQuickPrice to display pricing
+3. reuse existing vue component ItemQuickPrice to display correspond pricing
 ![Price Track Result](./renderer/public/images/priceTrack-result.png)
 
 ## 2. Item Trade List
