@@ -105,7 +105,7 @@ export function slug(raw: string): string {
 
 const GEM_TYPE_PATTERN = /\b(skill|spirit|support)\b/;
 const GEM_LEVEL_PATTERN = /\blevel\s+(\d+)\b/;
-const TW_GEM_PATTERN = /^\s*未切割的(.+?)寶石\s*[（(]\s*等級\s*(\d{1,2})\s*[)）]\s*$/mu;
+const TW_GEM_PATTERN = /^\s*未切割的(.+?)寶石\s*(?:[（(]\s*等級\s*(\d{1,2})\s*[)）]|等級\s*(\d{1,2}))\s*$/mu;
 
 export type GemResolution =
   | { isGemRow: false }
@@ -151,5 +151,5 @@ export function resolveTwGemKey(gemName: string): string {
       break;
   }
 
-  return `uncut ${type} gem level ${res[2]}`;
+  return `uncut ${type} gem level ${res?.[2] ?? res?.[3]}`;
 }

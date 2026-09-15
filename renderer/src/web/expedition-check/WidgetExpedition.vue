@@ -272,7 +272,7 @@ function buildRows(sourceRows: RawRow[]): DisplayRow[] {
       if (!resolved) {
         let translatedParsedName;
         if (parsed.name.includes("uncut") || parsed.name.includes("未切割的")) {
-          translatedParsedName = resolveTwGemKey(raw.text);
+          translatedParsedName = resolveTwGemKey(parsed.name);
         } else {
           translatedParsedName = slug(
             ITEM_BY_TRANSLATED("ITEM", parsed.name)?.[0]?.refName || ""
@@ -372,12 +372,12 @@ const rows = computed<DisplayRow[]>(() => buildRows(rawRows.value));
 //         "height": 0.029078014184397157
 //     },
 //     {
-//         "text": "未切割的技能寶石（等級 18）",
+//         "text": "1x 未切割的技能寶石（等級 18）",
 //         "y": 0.28592195868400916,
 //         "height": 0.02754399387911247
 //     },
 //     {
-//         "text": "精魂寶石",
+//         "text": "1x 未切割的精魂寶石 等級19",
 //         "y": 0.509946442234124,
 //         "height": 0.030604437643458302
 //     },
