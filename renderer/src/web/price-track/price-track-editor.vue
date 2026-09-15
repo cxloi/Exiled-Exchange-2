@@ -25,12 +25,13 @@
           >
             <i class="fas fa-grip-vertical text-gray-400" />
           </button>
-          <input
-            v-model="entry.text"
-            :placeholder="t('price_track.search_text')"
-            class="px-1 col-span-2 leading-6"
-            :class="entry.text.length > 250 ? 'bg-red-800' : 'bg-gray-900'"
-          />
+          
+          <select v-model="entry.text">
+            <option v-for="o in translatedList(entry.id)" :key="o.value" :value="o.value">
+              {{ o.label }}
+            </option>
+          </select>
+          <input class="w-24" v-model="searches[entry.id]" :placeholder="t('price_track.search')" />
           <button
             class="leading-none rounded-r bg-gray-700 w-6 h-6"
             @click="removeEntry(entry.id)"
@@ -47,11 +48,26 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import DndContainer from "vuedraggable";
 import { configProp, configModelValue } from "../settings/utils.js";
 import type { PriceTrackWidget } from "./widget.js";
+import { BaseType, ITEM_DROP, ITEM_BY_REF } from "@/assets/data";
+
+interface Entry {
+  query: string[];
+  items: string[];
+}
+
+interface DropdownEntry {
+  label: string;
+  value: string;
+}
+
+function flatten(data: Entry[]): string[] {
+  return [...new Set(data.flatMap(e => [...e.query, ...e.items]))];
+}
 
 export default defineComponent({
   name: "price_track.name",
@@ -59,6 +75,7 @@ export default defineComponent({
   props: configProp<PriceTrackWidget>(),
   setup(props) {
     const { t } = useI18n();
+    const searches = ref<Record<number, string>>({});
 
     return {
       t,
@@ -75,7 +92,36 @@ export default defineComponent({
           text: "",
         });
       },
+      searches
     };
   },
+  methods: {
+    translatedList(id: number): DropdownEntry[] {
+      const q = (this.searches[id] ?? '').trim().toLowerCase();
+
+      let flatLs = flatten(ITEM_DROP);
+      let filterLs =  flatLs.map(itemId => {
+        const [ns, encodedName] = itemId.split("::");
+        const [refName, variant] = encodedName.split(" // ");
+        
+        return {
+          label: ITEM_BY_REF(ns as unknown as BaseType["namespace"], refName)?.at(0)?.name || '',
+          value: itemId 
+        };
+      })
+        .filter(o => o.label !== "")
+
+      return q 
+        ? filterLs.filter(o => {
+            if (q) {
+              return o.label.toLowerCase().includes(q)
+            } else {
+              return true;
+            }
+          })
+        : filterLs;
+    },
+  }
 });
+
 </script>

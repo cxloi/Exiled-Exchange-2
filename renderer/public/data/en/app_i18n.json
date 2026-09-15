@@ -299,7 +299,7 @@
   },
   "price_track": {
     "name": "Price track",
-    "search_text": "search text id"
+    "search": "Search"
   },
   "notepad": {
     "name": "Notepad",

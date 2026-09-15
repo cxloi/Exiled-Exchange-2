@@ -295,7 +295,7 @@
   },
   "price_track": {
     "name": "價格追蹤",
-    "search_text": "物品TAG"
+    "search": "搜索"
   },
   "stash_search": {
     "enable_keys": "按鍵",

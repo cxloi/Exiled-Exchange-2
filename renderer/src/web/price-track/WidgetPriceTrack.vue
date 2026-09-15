@@ -44,7 +44,6 @@ export default {
 
 <script setup lang="ts">
 import { inject, computed, onMounted, onUnmounted } from "vue";
-import { useI18n } from "vue-i18n";
 import type { WidgetManager } from "../overlay/interfaces.js";
 import { BaseType, ITEM_BY_REF } from "@/assets/data";
 import Widget from "../overlay/Widget.vue";
@@ -56,7 +55,6 @@ function findItemByQueryId(queryId: string): BaseType | undefined {
   const [ns, encodedName] = queryId.split("::");
   const [name, variant] = encodedName.split(" // ");
   let found = ITEM_BY_REF(ns as unknown as BaseType["namespace"], name);
-  console.log("found", found, ns, name, variant)
   if (found && ns === "UNIQUE") {
     const filtered = found.filter((unique) => unique.unique!.base === variant);
     if (filtered.length) found = filtered;
@@ -68,9 +66,7 @@ function findItemByQueryId(queryId: string): BaseType | undefined {
 function findPriceByQueryId(queryId: string) {
   const [ns, encodedName] = queryId.split("::");
   const [name, variant] = encodedName.split(" // ");
-  console.log("queryId", ns, name, variant)
   const priceEntry = findPriceByQuery({ ns, name, variant });
-  console.log("priceEntry", priceEntry)
   if (priceEntry) {
     return autoCurrency(priceEntry.primaryValue);
   }
@@ -120,8 +116,6 @@ if (props.config.wmFlags[0] === "uninitialized") {
   ];
   wm.show(props.config.wmId);
 }
-
-const { t } = useI18n();
 </script>
 
 <style lang="postcss" module>
