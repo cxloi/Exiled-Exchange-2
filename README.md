@@ -3,7 +3,17 @@
 
 <b>== THIS IS A FORK FOR MY OWN GAMING NEEDS ==</b> 
 
-## 1. Item Trade list
+## 1. Price Track Widget
+Create a new price track widget to always show price based on available currency data.
+
+1. add price track widget
+![Price Track Widget](./renderer/public/images/priceTrack-widget.png)
+2. edit entry, the search input will filter each drop options, select to track it, filter support both translated text or key(english)
+![Price Track Search](./renderer/public/images/priceTrack-search.png)
+3. reuse vue component ItemQuickPrice to display pricing
+![Price Track Result](./renderer/public/images/priceTrack-result.png)
+
+## 2. Item Trade List
 A simple modification on existing StashSearch widget
 - add a new prefix logic to turn StashSearch button to open trade site based on name starts with #, become a hyperlink
 - append current league.id as uri component
@@ -16,7 +26,7 @@ A simple modification on existing StashSearch widget
 3. build trade list
 ![Build Equip List](./renderer/public/images/buildEquip-list.png)
 
-## 2. Expedition Price Check
+## 3. Expedition Price Check
 Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Exchange-2-Expedition-Checker) project, thanks to his implementation on Windows's OCR. Support zh-Hans translation in expedition widget.
 
 ### Mac Port

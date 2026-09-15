@@ -52,6 +52,7 @@ import { usePoeninja } from "@/web/background/Prices";
 const { queuePricesFetch, findPriceByQuery, autoCurrency, ITEM_DROP } = usePoeninja();
 
 function findItemByQueryId(queryId: string): BaseType | undefined {
+  if (!queryId) return;
   const [ns, encodedName] = queryId.split("::");
   const [name, variant] = encodedName.split(" // ");
   let found = ITEM_BY_REF(ns as unknown as BaseType["namespace"], name);

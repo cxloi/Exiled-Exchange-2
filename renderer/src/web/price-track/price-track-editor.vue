@@ -100,21 +100,24 @@ export default defineComponent({
       const q = (this.searches[id] ?? '').trim().toLowerCase();
 
       let flatLs = flatten(ITEM_DROP);
-      let filterLs =  flatLs.map(itemId => {
+      let filterLs: DropdownEntry[] = [];
+      flatLs.forEach(itemId => {
+        if (!itemId) return;
         const [ns, encodedName] = itemId.split("::");
         const [refName, variant] = encodedName.split(" // ");
         
-        return {
+        filterLs.push({
           label: ITEM_BY_REF(ns as unknown as BaseType["namespace"], refName)?.at(0)?.name || '',
           value: itemId 
-        };
+        });
       })
-        .filter(o => o.label !== "")
+      
+      filterLs.filter(o => o.label !== "")
 
       return q 
         ? filterLs.filter(o => {
             if (q) {
-              return o.label.toLowerCase().includes(q)
+              return o.label.toLowerCase().includes(q) || o.value.toLowerCase().includes(q)
             } else {
               return true;
             }
