@@ -297,6 +297,10 @@
     "chaos": "chaos",
     "div": "div"
   },
+  "price_track": {
+    "name": "Price track",
+    "search_text": "search text id"
+  },
   "notepad": {
     "name": "Notepad",
     "placeholder": "Type your notes here…",

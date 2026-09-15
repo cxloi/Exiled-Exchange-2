@@ -293,6 +293,10 @@
     "chaos": "混沌",
     "div": "神聖"
   },
+  "price_track": {
+    "name": "價格追蹤",
+    "search_text": "物品TAG"
+  },
   "stash_search": {
     "enable_keys": "按鍵",
     "name": "倉庫搜尋",
