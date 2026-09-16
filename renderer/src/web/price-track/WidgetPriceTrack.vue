@@ -88,7 +88,7 @@ const props = defineProps<{
 
 const wm = inject<WidgetManager>("wm")!;
 
-const INTERVAL = 60000;
+const INTERVAL = 600000;
 let timer: ReturnType<typeof setInterval> | undefined;
 onMounted(() => {
   queuePricesFetch();

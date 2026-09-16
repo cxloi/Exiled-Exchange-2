@@ -25,13 +25,7 @@
           >
             <i class="fas fa-grip-vertical text-gray-400" />
           </button>
-          
-          <select v-model="entry.text">
-            <option v-for="o in translatedList(entry.id)" :key="o.value" :value="o.value">
-              {{ o.label }}
-            </option>
-          </select>
-          <input class="w-24" v-model="searches[entry.id]" :placeholder="t('price_track.search')" />
+          <price-track-entry v-model="entry.text" :options="flatLs" />
           <button
             class="leading-none rounded-r bg-gray-700 w-6 h-6"
             @click="removeEntry(entry.id)"
@@ -55,11 +49,7 @@ import DndContainer from "vuedraggable";
 import { configProp, configModelValue } from "../settings/utils.js";
 import type { PriceTrackWidget } from "./widget.js";
 import { BaseType, ITEM_EN_LANG, ITEM_BY_REF } from "@/assets/data";
-
-interface DropdownEntry {
-  label: string;
-  value: string;
-}
+import PriceTrackEntry, { DropdownEntry } from "./PriceTrackEntry.vue";
 
 function flatten(data: EnLangEntry[]): string[] {
   return [
@@ -81,7 +71,7 @@ function flatten(data: EnLangEntry[]): string[] {
 
 export default defineComponent({
   name: "price_track.name",
-  components: { DndContainer },
+  components: { DndContainer, PriceTrackEntry },
   props: configProp<PriceTrackWidget>(),
   setup(props) {
     const { t } = useI18n();
@@ -102,7 +92,6 @@ export default defineComponent({
           text: "",
         });
       },
-      searches
     };
   },
   computed: {
@@ -121,21 +110,6 @@ export default defineComponent({
       })
       return filterLs.filter(o => o.label !== "");
     }
-  },
-  methods: {
-    translatedList(id: number): DropdownEntry[] {
-      const q = (this.searches[id] ?? '').trim().toLowerCase();
-      
-      return q 
-        ? this.flatLs.filter(o => {
-            if (q) {
-              return o.label.toLowerCase().includes(q) || o.value.toLowerCase().includes(q)
-            } else {
-              return true;
-            }
-          })
-        : this.flatLs;
-    },
   }
 });
 
