@@ -63,7 +63,7 @@ import type { WidgetManager } from "../overlay/interfaces";
 import type { ExpeditionWidget } from "../overlay/widgets";
 import Widget from "../overlay/Widget.vue";
 import { parseLine, slug, resolveTwGemKey } from "./parsing";
-import { buildPriceIndex, resolvePrice } from "./price-match";
+import { buildPriceIndex, PriceIndex, resolvePrice } from "./price-match";
 import { DEFAULT_REGION } from "./region";
 import { ITEM_BY_TRANSLATED } from "@/assets/data";
 
@@ -179,6 +179,8 @@ onMounted(() => {
 });
 onUnmounted(() => clearInterval(timer));
 
+const priceIndex = computed<PriceIndex>(() => buildPriceIndex(getFlatPriceEntries(EXPEDITION_PRICE_CATEGORIES))); 
+
 interface DisplayRow {
   quantity: number;
   displayName: string;
@@ -224,9 +226,6 @@ interface DisplayRow {
 // ambiguous "Saga", risking a fuzzy-match onto the wrong one. Matching against the
 // full, unedited line avoids that failure mode entirely.
 function buildRows(sourceRows: RawRow[]): DisplayRow[] {
-  const priceIndex = buildPriceIndex(
-    getFlatPriceEntries(EXPEDITION_PRICE_CATEGORIES),
-  );
   const out: DisplayRow[] = [];
 
   for (const raw of sourceRows) {
@@ -239,7 +238,7 @@ function buildRows(sourceRows: RawRow[]): DisplayRow[] {
     let totalValue: number | null = null;
     let valueTier: DisplayRow["valueTier"] = null;
     if (lookupKey) {
-      let resolved = resolvePrice(lookupKey, priceIndex);
+      let resolved = resolvePrice(lookupKey, priceIndex.value);
       if (!resolved) {
         let translatedParsedName;
         if (parsed.name.includes("uncut") || parsed.name.includes("未切割的")) {
@@ -249,7 +248,7 @@ function buildRows(sourceRows: RawRow[]): DisplayRow[] {
             ITEM_BY_TRANSLATED("ITEM", parsed.name)?.[0]?.refName || ""
           );
         }
-        resolved = resolvePrice(translatedParsedName, priceIndex);
+        resolved = resolvePrice(translatedParsedName, priceIndex.value);
       }
       
       if (resolved) {
@@ -267,8 +266,12 @@ function buildRows(sourceRows: RawRow[]): DisplayRow[] {
             valueTier = "low"
             break;
         }
+        if (priceMeta.val == '0') continue;
       }
     }
+
+    if (priceText == '?') continue;
+
     out.push({
       quantity: parsed.quantity,
       displayName: parsed.name,
