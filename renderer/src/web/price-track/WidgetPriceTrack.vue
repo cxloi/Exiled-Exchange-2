@@ -4,8 +4,8 @@
       class="widget-default-style p-1 flex flex-col overflow-y-auto min-h-0"
       style="min-width: 5rem"
     >
-      <div class="text-gray-100 p-1 flex items-center justify-between gap-4">
-        <span class="truncate">{{ config.wmTitle || "Untitled" }}</span>
+      <div v-if="config.wmTitle" class="text-gray-100 p-1 flex items-center justify-between gap-4">
+        <span class="truncate">{{ config.wmTitle }}</span>
       </div>
       <div class="flex flex-row px-4 gap-x-5 overflow-x-auto min-h-0">
         <div v-for="item in itemLs" :key="item.name">
