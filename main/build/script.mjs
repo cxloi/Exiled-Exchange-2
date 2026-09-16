@@ -30,6 +30,7 @@ const visionBuild = await esbuild.build({
 // __dirname at runtime (same convention link-main.ts uses for vision.js above), so
 // it needs to sit next to the compiled output rather than just live in src/.
 fs.copyFileSync('src/vision/windows-ocr-recognize.ps1', 'dist/windows-ocr-recognize.ps1')
+fs.copyFileSync('src/vision/macos-ocr-recognize.sh', 'dist/macos-ocr-recognize.sh')
 
 const mainContext = await esbuild.context({
   entryPoints: ['src/main.ts'],

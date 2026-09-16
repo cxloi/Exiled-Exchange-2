@@ -55,7 +55,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { shallowRef, computed, inject, watch, onUnmounted } from "vue";
+import { shallowRef, computed, inject, watch, onMounted, onUnmounted } from "vue";
 import { useI18nNs } from "@/web/i18n";
 import { Host } from "@/web/background/IPC";
 import { displayRounding, usePoeninja } from "@/web/background/Prices";
@@ -171,42 +171,13 @@ function rowStyle(row: DisplayRow) {
   };
 }
 
-// Once a scan finds real rows, keep re-scanning the same region on a timer so the
-// display can clear itself again once you close the panel - reuses the exact same
-// OCR round-trip a hotkey press triggers (CLIENT->MAIN::request-ocr was already
-// wired up main-process-side for this), just fired on an interval instead of a
-// keypress. No new main-process code needed.
-const POLL_INTERVAL_MS = 1500;
-const CLOSE_AFTER_EMPTY_POLLS = 2;
-let pollTimer: ReturnType<typeof setInterval> | null = null;
-let emptyPollCount = 0;
-
-function stopWatching() {
-  if (pollTimer !== null) {
-    clearInterval(pollTimer);
-    pollTimer = null;
-  }
-}
-
-function startWatching() {
-  if (pollTimer !== null) return; // already watching
-  emptyPollCount = 0;
-  pollTimer = setInterval(() => {
-    if (!props.config.region) {
-      stopWatching();
-      return;
-    }
-    Host.sendEvent({
-      name: "CLIENT->MAIN::request-ocr",
-      payload: {
-        target: "expedition-price",
-        region: props.config.region,
-      },
-    });
-  }, POLL_INTERVAL_MS);
-}
-
-onUnmounted(stopWatching);
+const INTERVAL = 600000;
+let timer: ReturnType<typeof setInterval> | undefined;
+onMounted(() => {
+  queuePricesFetch();
+  timer = setInterval(queuePricesFetch, INTERVAL);
+});
+onUnmounted(() => clearInterval(timer));
 
 interface DisplayRow {
   quantity: number;
@@ -336,26 +307,15 @@ function priceColorClass(row: DisplayRow): string {
 }
 
 Host.onEvent("MAIN->CLIENT::ocr-text", (e) => {
-  if (e.target !== "expedition-price") return;
-  // Expresses interest right when we're about to need fresh prices, matching how
-  // other widgets (e.g. item-search) drive usePoeninja()'s lazy/throttled fetch.
-  queuePricesFetch();
+  if (e.target !== "expedition-price" || !props.config.region) return;
   // e.rows is only optional in the shared IPC type for the "heist-gems" target's
   // sake (it never sends one) - main always sends it for "expedition-price".
   const newRows = e.rows ?? e.paragraphs.map((text) => ({ text, y: 0, height: 0 }));
   rawRows.value = newRows;
 
-  if (buildRows(newRows).length > 0) {
-    emptyPollCount = 0;
-    startWatching();
-  } else if (pollTimer !== null && ++emptyPollCount >= CLOSE_AFTER_EMPTY_POLLS) {
-    // A couple of consecutive empty reads in a row (not just one - a stray bad
-    // frame shouldn't clear real results) means the panel's most likely closed.
-    // Same "resolves to something real" check as the display filter, so icon-glyph
-    // noise that happens to parse can't keep this thinking the panel is still open.
-    rawRows.value = [];
-    stopWatching();
-  }
+  setTimeout(() => {
+    rawRows.value = []
+  }, 2000);
 });
 
 // Rebuilt from getFlatPriceEntries()'s current snapshot each time rawRows changes,
