@@ -7,19 +7,17 @@
       <div class="text-gray-100 p-1 flex items-center justify-between gap-4">
         <span class="truncate">{{ config.wmTitle || "Untitled" }}</span>
       </div>
-      <div class="flex flex-col gap-y-1 overflow-y-auto min-h-0">
-        <div class="flex-1 p-2">
-          <div v-for="item in itemLs" :key="item.name">
-            <item-quick-price
-              currency-text
-              fraction
-              class="text-base"
-              :price="item.price"
-              :item-img="item.icon"
-            />
-            <div class="text-left text-gray-600 mb-1 whitespace-nowrap overflow-hidden">
-              {{ item.name }}
-            </div>
+      <div class="flex flex-row px-4 gap-x-5 overflow-x-auto min-h-0">
+        <div v-for="item in itemLs" :key="item.name">
+          <item-quick-price
+            currency-text
+            fraction
+            class="text-base"
+            :price="item.price"
+            :item-img="item.icon"
+          />
+          <div class="text-left text-gray-600 mb-1 whitespace-nowrap overflow-hidden">
+            {{ item.name }}
           </div>
         </div>
       </div>
