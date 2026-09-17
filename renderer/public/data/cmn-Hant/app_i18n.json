@@ -314,7 +314,9 @@
     "add_guide": "添加指引",
     "add_map": "添加地圖",
     "optional": "可選",
-    "section": "分割線"
+    "section": "分割線",
+    "level": "等級",
+    "exp_rate": "經驗率"
   },
   "stash_search": {
     "enable_keys": "按鍵",

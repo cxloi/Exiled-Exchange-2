@@ -5,14 +5,28 @@
     :inline-edit="false"
     move-handles="top-bottom"
   >
-    <div v-if="!currentMap" class="p-2 text-gray-100 p-1 flex items-center justify-between gap-4">
+    <div v-if="!currentMap" class="p-2 text-gray-100 p-1 flex items-center justify-between gap-4 text-[#d9d6cf] [text-shadow:1px_1px_2px_#000]">
       <span class="truncate">{{ config.wmTitle || "Untitled" }}</span>
     </div>
-    <div v-if="currentMap" class="p-2 w-full max-w-[400px] rounded-md opacity-80 text-[#d9d6cf] [text-shadow:1px_1px_2px_#000]">
-        <span class="inline-block px-2 py-1 rounded-md">
-          {{ currentMap.name }}
-        </span>
-      <ul class="px-2 py-3 space-y-1">
+
+    <div v-if="currentMap" class="p-2 w-full min-w-[300px] max-w-[400px] rounded-md opacity-80 text-[#d9d6cf] [text-shadow:1px_1px_2px_#000]">
+      <div class="px-2 pb-2 flex items-center">
+        <div class="flex-1">{{ t('campaign_guide.level') }} {{ characterLevel }}</div>
+        <div 
+          class="flex-1 text-right"
+          :class="{
+            'text-red-800': expPenalty !== '100.0',
+            'text-yellow-800': expPenalty == '100.0',
+          }"
+        >
+          {{ t('campaign_guide.exp_rate' )}} {{ expPenalty }}%
+        </div>
+      </div>
+      
+      <span class="inline-block px-2 rounded-md underline underline-offset-4">
+        {{ currentMap.name }}
+      </span>
+      <ul class="px-2 py-2 space-y-1">
         <template v-for="(g, i) in currentMap.guides" :key="i">
           <!-- section -->
           <li v-if="g.section" class="flex items-center gap-3 py-1">
@@ -28,7 +42,7 @@
             </span>
             <span class="break-words min-w-0">
               {{ g.text }}
-              <span v-if="g.optional" class="inline-block px-2 py-0.5 mx-0.5 rounded text-xs bg-gray-700 text-white">可選</span>
+              <span v-if="g.optional" class="inline-block px-2 py-0.5 mx-0.5 rounded text-xs bg-gray-700 text-white">{{ t('campaign_guide.optional') }}</span>
               <span v-if="g.attr" class="inline-block px-1.5 py-0.5 mx-0.5 rounded text-xs bg-green-700 text-green-100">{{ g.attr }}</span>
               <span v-if="g.item" class="inline-block px-1.5 py-0.5 mx-0.5 rounded text-xs bg-yellow-700 text-yellow-100">{{ g.item }}</span>
             </span>

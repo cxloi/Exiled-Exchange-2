@@ -318,7 +318,9 @@
     "add_guide": "Add Guide",
     "add_map": "Add Map",
     "optional": "Optional",
-    "section": "Divider"
+    "section": "Divider",
+    "level": "Level",
+    "exp_rate": "Exp Rate"
   },
   "notepad": {
     "name": "Notepad",
