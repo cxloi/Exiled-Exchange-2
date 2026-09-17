@@ -307,6 +307,19 @@
     "search_text": "url address",
     "friendly_name": "friendly name"
   },
+  "campaign_guide": {
+    "name": "Campaign guide",
+    "enable_read_client_logs": "Campaign widgets require allowing reading of client logs",
+    "map_id": "Map id",
+    "map_name": "Map name",
+    "guide_text": "Guide instruction",
+    "earn_attr": "Earn attribute",
+    "item_drop": "Item drop",
+    "add_guide": "Add Guide",
+    "add_map": "Add Map",
+    "optional": "Optional",
+    "section": "Divider"
+  },
   "notepad": {
     "name": "Notepad",
     "placeholder": "Type your notes here…",

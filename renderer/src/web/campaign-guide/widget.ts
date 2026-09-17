@@ -1,16 +1,13 @@
 import { Anchor, Widget } from "../overlay/widgets";
 
-type Guide = {
+export type Guide = {
   section?: boolean;
   optional: boolean;
   text: string;
-  location?: string;
   attr?: string;
-  skill?: string;
   item?: string;
-  trial?: string;
 };
-type Map = {
+export type Map = {
   mapId: string;
   name: string;
   guides: Guide[];

@@ -1,19 +1,35 @@
 <template>
   <Widget
     :config="config"
-    :removable="false"
+    :removable="true"
     :inline-edit="false"
     move-handles="top-bottom"
   >
-    <div v-if="currentMap" class="widget-default-style p-2">
+    <div v-if="currentMap" class="widget-default-style p-2 w-[400px]">
         <span class="inline-block px-2 py-1 rounded-md bg-slate-700 text-slate-100 font-bold">
           {{ currentMap.name }}
         </span>
       <ul class="px-2 py-3 space-y-1">
-        <li v-for="(g, i) in currentMap.guides" :key="i" class="flex items-center gap-2">
-          <span> • {{ g.text }}</span>
-          <span v-if="g.optional" class="text-xs text-neutral-500">[optional]</span>
-        </li>
+        <template v-for="(g, i) in currentMap.guides" :key="i">
+          <!-- section -->
+          <li v-if="g.section" class="flex items-center gap-3 py-1">
+            <div class="flex-1 min-w-8 border-t border-neutral-400"></div>
+            <span class="text-sm italic text-neutral-400 whitespace-nowrap">{{ g.text }}</span>
+            <div class="flex-1 min-w-8 border-t border-neutral-400"></div>
+          </li>
+          <!-- ul item -->
+          <li v-else class="flex items-center">
+            <span class="w-1.5 h-1.5 rounded-full bg-neutral-500 shrink-0"></span>
+            <span> • {{ g.text }}
+              <!-- optional -->
+              <span v-if="g.optional" class="px-2 py-0.5 mx-0.5 ml-1.5 rounded text-xs bg-gray-700 text-white">可選</span>
+              <!-- attr -->
+              <span v-if="g.attr" class="px-1.5 py-0.5 mx-0.5 rounded text-xs bg-green-700 text-green-100">{{ g.attr }}</span>
+              <!-- item -->
+              <span v-if="g.item" class="px-1.5 py-0.5 mx-0.5 rounded text-xs bg-yellow-700 text-yellow-100">{{ g.item }}</span>
+            </span>
+          </li>
+        </template>
       </ul>
     </div>
   </Widget>
@@ -58,7 +74,7 @@ export default defineComponent({
   widget: {
     type: "campaign-guide",
     instances: "multi",
-    trNameKey: "campaign-guide.name",
+    trNameKey: "campaign_guide.name",
     defaultInstances: (): CampaignGuideWidget[] => {
       return [{
         wmId: 0,
@@ -68,8 +84,8 @@ export default defineComponent({
         wmZorder: null,
         wmFlags: [],
         anchor: {
-          pos: "tl",
-          x: 35,
+          pos: "cr",
+          x: 60,
           y: 46,
         },
         maps: []
@@ -108,9 +124,9 @@ export default defineComponent({
           mapId: "G1_1",
           name: "皆伐營地",
           guides: [
-            {"optional":false,"text":"與倫利交談 → 前往皆伐"}, 
+            {"optional":true,"text":"與倫利交談 → 前往 皆伐", attr: "+10% 冰冷抗性", item: "技能寶石(5)"}, 
             {"section": true, "optional":false,"text":"完成 赤谷 後"},
-            {"optional":false,"text":"與倫利交談 → 返回葛瑞爾林"}
+            {"optional":false,"text":"與倫利交談 → 返回 葛瑞爾林"}
           ]
         },
         {

@@ -75,7 +75,6 @@ export default defineComponent({
   props: configProp<PriceTrackWidget>(),
   setup(props) {
     const { t } = useI18n();
-    const searches = ref<Record<number, string>>({});
 
     return {
       t,

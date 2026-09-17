@@ -303,6 +303,19 @@
     "search_text": "目标网址",
     "friendly_name": "友好名稱"
   },
+  "campaign_guide": {
+    "name": "戰役指引",
+    "enable_read_client_logs": "戰役工具需要允許讀取客戶端日誌",
+    "map_id": "地圖ID 比如G1_1",
+    "map_name": "圖名",
+    "guide_text": "任務指引",
+    "earn_attr": "角色加成",
+    "item_drop": "物品掉落",
+    "add_guide": "添加指引",
+    "add_map": "添加地圖",
+    "optional": "可選",
+    "section": "分割線"
+  },
   "stash_search": {
     "enable_keys": "按鍵",
     "name": "倉庫搜尋",
