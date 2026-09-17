@@ -145,6 +145,7 @@ import SettingsLibrary from "../library/settings-library.vue";
 import SettingsExpedition from "../expedition-check/settings-expedition.vue";
 import SettingsPriceTrack from "../price-track/price-track-editor.vue";
 import SettingsUrlList from "../url-list/url-list-editor.vue";
+import SettingsCampaignGuide from "../campaign-guide/campaign-guide-editor.vue";
 import { disableWidget, enableWidget, findWidget } from "./utils";
 
 function shuffle<T>(array: T[]): T[] {
@@ -358,6 +359,8 @@ function menuByType(type?: string) {
       return [[SettingsPriceTrack]];
     case "url-list":
       return [[SettingsUrlList]];
+    case "campaign-guide":
+      return [[SettingsCampaignGuide]];
     default:
       return [
         [SettingsHotkeys, SettingsChat],
