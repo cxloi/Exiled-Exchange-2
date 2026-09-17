@@ -5,8 +5,11 @@
     :inline-edit="false"
     move-handles="top-bottom"
   >
-    <div v-if="currentMap" class="widget-default-style p-2 w-[400px] rounded-md opacity-80">
-        <span class="inline-block px-2 py-1 rounded-md bg-slate-700 text-slate-100 font-bold">
+    <div v-if="!currentMap" class="p-2 text-gray-100 p-1 flex items-center justify-between gap-4">
+      <span class="truncate">{{ config.wmTitle || "Untitled" }}</span>
+    </div>
+    <div v-if="currentMap" class="p-2 w-full max-w-[400px] rounded-md opacity-80 text-[#d9d6cf] [text-shadow:1px_1px_2px_#000]">
+        <span class="inline-block px-2 py-1 rounded-md">
           {{ currentMap.name }}
         </span>
       <ul class="px-2 py-3 space-y-1">
@@ -18,15 +21,16 @@
             <div class="flex-1 min-w-8 border-t border-neutral-400"></div>
           </li>
           <!-- ul item -->
-          <li v-else class="flex items-center">
-            <span class="w-1.5 h-1.5 rounded-full bg-neutral-500 shrink-0"></span>
-            <span> • {{ g.text }}
-              <!-- optional -->
-              <span v-if="g.optional" class="px-2 py-0.5 mx-0.5 ml-1.5 rounded text-xs bg-gray-700 text-white">可選</span>
-              <!-- attr -->
-              <span v-if="g.attr" class="px-1.5 py-0.5 mx-0.5 rounded text-xs bg-green-700 text-green-100">{{ g.attr }}</span>
-              <!-- item -->
-              <span v-if="g.item" class="px-1.5 py-0.5 mx-0.5 rounded text-xs bg-yellow-700 text-yellow-100">{{ g.item }}</span>
+          <li v-else class="flex items-start gap-1.5">
+            <span class="flex items-center h-[1lh] shrink-0">
+              <!-- <img class="w-3 h-3" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MTIgNTEyJyBzdHlsZT0naGVpZ2h0OiA1MTJweDsgd2lkdGg6IDUxMnB4Oyc+PGNpcmNsZSBjeD0nMjU2JyBjeT0nMjU2JyByPScyNTYnIGZpbGw9JyMwMDAwMDAnIGZpbGwtb3BhY2l0eT0nMC4wMSc+PC9jaXJjbGU+PGcgY2xhc3M9JycgdHJhbnNmb3JtPSd0cmFuc2xhdGUoMCwwKScgc3R5bGU9Jyc+PHBhdGggZD0nbTM0LjIyIDE5Ljg0NC0xMi40MDcuMTI1LjA2MiAzMCAxNzcuOTcgMTc3LjVjNC45OC04Ljk1NyAxMi44ODQtMTYuMDg4IDIyLjQwNS0yMC4wNjRMMzQuMjIgMTkuODQ0em0yMDUuNDM2IDIwMi43NWMtMTQuOTQ2IDAtMjYuODQ0IDExLjkzLTI2Ljg0NCAyNi44NzVzMTEuODk4IDI2Ljg3NCAyNi44NDQgMjYuODc0YzE0Ljk0NiAwIDI2Ljg3NS0xMS45MyAyNi44NzUtMjYuODc1IDAtMTQuOTQ3LTExLjkyOC0yNi44NzYtMjYuODc0LTI2Ljg3NnptMTUwLjg3NSAxNS43NWMtMTUuOTA1IDExLjQxMy0zMS42MzcgMTguNDA0LTQ3LjQ2NyAyMS41IDI5LjI2MyAzOS41NyA0OS45MjcgNzEuNDQzIDYyLjI4IDk2IDYuODA0IDEzLjUyMyAxMS4xNjIgMjQuNzg4IDEyLjkwNyAzNC41NjIgMS43NDUgOS43NzQuODc2IDE5LjQxNy01LjgxMyAyNS45MDYtNi42ODggNi40OS0xNi4yMTYgNy4yMDgtMjYuMTI1IDUuNTMyLTkuOTA4LTEuNjc2LTIxLjM5NC01Ljg4LTM1LjE4Ny0xMi40MzgtMjUuMzY4LTEyLjA1OC01OC4zNzctMzIuMjk0LTk5LjIyLTYwLjkwNi0yLjY0NiAxNi4zNDctOC45MDQgMzIuMjEtMTkuMDYgNDcuNTMgNjQuMDcgNDMuNTggMTYzLjQ5NiA4My43ODMgMjQ2LjQ2OCA4OC43ODMgMy42MTQtODUuMjQ3LTQyLjMyOC0xODEuMDI0LTg4Ljc4Mi0yNDYuNDd6bS0xMDUuNjU1IDE2LjU2MmMtMi4zNzUgMTkuNjY4LTE3LjQxMiAzNS41OC0zNi42NTYgMzkuMjggMy4wNyAxMSA0Ljc3NiAyMS44MTYgNS4wOTMgMzIuNDQgNDQuNzI4IDMxLjc5NyA4MC4zMTQgNTMuNzg1IDEwNS44MTIgNjUuOTA1IDEyLjg4OCA2LjEyNyAyMy4yNjMgOS42ODQgMzAuMzEzIDEwLjg3NiA3LjA1IDEuMTkzIDkuNTc3LS4xMiA5Ljk2OC0uNS4zOTItLjM4IDEuNjQ0LTIuNDYuNDM4LTkuMjItMS4yMDctNi43NTYtNC44NTItMTYuODQtMTEuMTg4LTI5LjQzNi0xMi40LTI0LjY0Ny0zNC44OC01OS4xMDYtNjcuNS0xMDIuNTYzLTExLjkyMi0uMjg4LTIzLjk2OC0yLjYxLTM2LjI4LTYuNzh6JyBmaWxsPScjZmZmJyBmaWxsLW9wYWNpdHk9JzEnPjwvcGF0aD48L2c+PC9zdmc+" /> -->
+              <img class="w-3 h-3" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCA1MTIgNTEyJyBzdHlsZT0naGVpZ2h0OiA1MTJweDsgd2lkdGg6IDUxMnB4Oyc+PGNpcmNsZSBjeD0nMjU2JyBjeT0nMjU2JyByPScyNTYnIGZpbGw9JyMwMDAwMDAnIGZpbGwtb3BhY2l0eT0nMC4wMSc+PC9jaXJjbGU+PGcgY2xhc3M9JycgdHJhbnNmb3JtPSd0cmFuc2xhdGUoMCwwKScgc3R5bGU9Jyc+PHBhdGggZD0nTTE4LjUwNiAxOS44OTV2MzcuNTZMMTM1LjExIDE3NC4wNmwzMy43NTUtMzMuNzU3TDQ4Ljk3IDE5Ljg5NUgxOC41MDd6bTI5Ni45MjQgODEuNjA3Yy04LjM5OCAxNy42OTUtMTcuNTggMzQuNTE0LTI3LjU1NSA1MC40OCA1My4wNTIgNTUuNiAxMDkuMDk0IDE2NS4xNTUgMTQ1LjYwMiAyNzAuODI3bDYuMzMyIDE4LjMyNy0xOC4yOC02LjQ2N2MtMTA0LjY4Ny0zNy4wMzQtMjIwLjYyLTkxLjI2NC0yNzQuMzc0LTE0MS45NjctMTUuOTcyIDkuOTgtMzIuNzkzIDE5LjE2NS01MC40OSAyNy41NjMgNTMuNjkzIDM1LjY4NSAxMjEuNTcgNjkuMjIyIDE4OS40OTYgOTUuMTY2LTE0LjQzNyA3LjE4OC0yOS45MzggMTMuNTktNDYuNTggMTkuMjdsLjAwMi4wMDNjNjguMjY0IDM4LjYzIDE3NS41NyA2NS40NyAyNTQuNDEyIDY0LjEyNyAxLjMzLTc4LjA1Mi0yNy4wOC0xODguOTUtNjQuMTI3LTI1NC40MTYtNS43NiAxNi44Ny0xMi4yNTcgMzIuNTctMTkuNTYgNDcuMTY2LTI2LjQ1OC02OS4yMDUtNjAuMzg3LTEzOC4xODItOTQuODgtMTkwLjA4em0tMTE3Ljg1OCAzNi41MjNMMTM1Ljc5IDE5OS44MWMzNC4yMDcgMzEuNjIgNjcuNzc1IDU2Ljc2MyA5NC43OTggNzEuNTk4IDE0LjQ1NCA3LjkzNSAyNy4wOTQgMTIuOTUgMzYuMzM0IDE0Ljc2MiA5LjI0IDEuODEyIDEzLjc3OC4zNCAxNS41NjQtMS40NDUgMS43ODYtMS43ODYgMy4yNi02LjMyNiAxLjQ0OC0xNS41NjUtMS44MTItOS4yNC02LjgzLTIxLjg4LTE0Ljc2NC0zNi4zMzQtMTQuODM1LTI3LjAyMy0zOS45NzYtNjAuNTktNzEuNTk4LTk0Ljh6bTc5Ljc2MiAzMC4wOGMtNC42NiA2LjgxLTkuNDggMTMuNDUtMTQuNDU3IDE5LjkyNiA4Ljg5MiAxMi41NTcgMTYuNTIgMjQuNTg3IDIyLjY3NiAzNS44MDIgOC41MTUgMTUuNTEgMTQuMzA2IDI5LjQzIDE2LjcxOCA0MS43MyAyLjQxNCAxMi4zIDEuNTI4IDI0LjI4LTYuNTcgMzIuMzc3LTguMDk2IDguMDk2LTIwLjA3NiA4Ljk4Mi0zMi4zNzYgNi41Ny0xMi4zLTIuNDEzLTI2LjIyLTguMjA2LTQxLjczLTE2LjcyLTExLjEtNi4wOTQtMjMtMTMuNjMyLTM1LjQxNC0yMi40MDVhNDQ3Ljc4MiA0NDcuNzgyIDAgMCAxLTIyLjg3NyAxNi43NmM0Ny4yNjMgNDIuMjEgMTQ5LjY2NCA5Mi4zMTcgMjQ1LjU0NSAxMjcuODczLTM1LjE5LTk1Ljc2Ni04Ni4zNDctMTkyLjYwMi0xMzEuNTE0LTI0MS45MTN6JyBmaWxsPScjZmZmJyBmaWxsLW9wYWNpdHk9JzEnPjwvcGF0aD48L2c+PC9zdmc+" />
+            </span>
+            <span class="break-words min-w-0">
+              {{ g.text }}
+              <span v-if="g.optional" class="inline-block px-2 py-0.5 mx-0.5 rounded text-xs bg-gray-700 text-white">可選</span>
+              <span v-if="g.attr" class="inline-block px-1.5 py-0.5 mx-0.5 rounded text-xs bg-green-700 text-green-100">{{ g.attr }}</span>
+              <span v-if="g.item" class="inline-block px-1.5 py-0.5 mx-0.5 rounded text-xs bg-yellow-700 text-yellow-100">{{ g.item }}</span>
             </span>
           </li>
         </template>
@@ -75,22 +79,6 @@ export default defineComponent({
     type: "campaign-guide",
     instances: "multi",
     trNameKey: "campaign_guide.name",
-    defaultInstances: (): CampaignGuideWidget[] => {
-      return [{
-        wmId: 0,
-        wmType: "campaign-guide",
-        wmTitle: "Campaign guide",
-        wmWants: "hide",
-        wmZorder: null,
-        wmFlags: [],
-        anchor: {
-          pos: "cr",
-          x: 60,
-          y: 46,
-        },
-        maps: []
-      }];
-    },
   } satisfies WidgetSpec,
   components: { Widget },
   props: {
@@ -114,27 +102,13 @@ export default defineComponent({
     const wm = inject<WidgetManager>("wm")!;
 
     if (props.config.wmFlags[0] === "uninitialized") {
+      props.config.wmFlags = [];
       props.config.anchor = {
         pos: "tl",
         x: Math.random() * (40 - 20) + 20,
         y: Math.random() * (40 - 20) + 20,
       };
-      props.config.maps = [
-        {
-          mapId: "G1_1",
-          name: "皆伐營地",
-          guides: [
-            {"optional":true,"text":"與倫利交談 → 前往 皆伐", attr: "+10% 冰冷抗性", item: "技能寶石(5)"}, 
-            {"section": true, "optional":false,"text":"完成 赤谷 後"},
-            {"optional":false,"text":"與倫利交談 → 返回 葛瑞爾林"}
-          ]
-        },
-        {
-          mapId: "G1_2",
-          name: "河岸",
-          guides: [{"optional":false,"text":"擊殺臃腫磨坊主"}, {"optional":false,"text":"进入城镇"}]
-        }
-      ]
+      props.config.maps = []
       wm.show(props.config.wmId);
     }
 

@@ -1,5 +1,10 @@
 <template>
   <div class="p-2">
+    <input
+      class="bg-gray-900 rounded px-1 w-48 mb-2"
+      :placeholder="t('widget.title')"
+      v-model="title"
+    />
     <div class="mb-4">{{ t(":enable_read_client_logs") }}</div>
     <div class="mb-2">
       <div class="flex-1 mb-1">{{ t("settings.poe_log_file") }}</div>
@@ -154,6 +159,7 @@ export default defineComponent({
 
     return {
       t,
+      title: configModelValue(() => props.configWidget, "wmTitle"),
       readClientLog: configModelValue(() => props.config, "readClientLog"),
       clientLog: configModelValue(() => props.config, "clientLog"),
       triggerReparseLog: () => {
