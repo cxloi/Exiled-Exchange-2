@@ -3,6 +3,8 @@
 2. [Expedition Rune](#expedition-rune-widget)
 3. [Url list](#url-list-widget)
 
+[Build step](#build-step)
+
 ## Price Track Widget
 A price track widget to show pricing. Dropdown list comes from `en/items.ndjson`.
 | Setting                                                               | Display                                                               |
@@ -19,7 +21,15 @@ Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Excha
 |------------------------------------------------------------------|------------------------------------------------------------------|
 | ![Ocr Mac Port](./renderer/public/images/expedition-macPort.png) | ![Ocr Win Port](./renderer/public/images/expedition-winPort.png) |
 
-### A. Mac Build
+## Url List Widget
+A url widget shortcut to access resources.
+
+| Setting                                                          | Display                                                            |
+|------------------------------------------------------------------|--------------------------------------------------------------------|
+| ![Price Track Search](./renderer/public/images/urlList-edit.png) | ![Price Track Result](./renderer/public/images/urlList-result.png) |
+
+## Build Step
+### Mac Build
 1. to build dmg `sh testUpdate.sh`
 2. grant accessibility + screen recording
     - remove the permission entries
@@ -27,7 +37,7 @@ Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Excha
     - kill the app and grant both
     - restart the app
 
-### B. Win Build
+### Win Build
 1. install extra language OCR
     - open powershell with admin rights
     - `Add-WindowsCapability -Online -Name "Language.OCR~~~zh-TW~0.0.1.0"` and restart
@@ -37,13 +47,6 @@ Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Excha
     - open powershell with admin rights
     - cd to main/
     - `npx electron-builder --win --x64`
-
-## Url List Widget
-A url widget shortcut to access resources.
-
-| Setting                                                          | Display                                                            |
-|------------------------------------------------------------------|--------------------------------------------------------------------|
-| ![Price Track Search](./renderer/public/images/urlList-edit.png) | ![Price Track Result](./renderer/public/images/urlList-result.png) |
 
 # ![Perfect Jewelers Orb](./renderer/public/images/jeweler.png) Exiled Exchange 2
 
