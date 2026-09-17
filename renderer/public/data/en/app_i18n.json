@@ -301,6 +301,12 @@
     "name": "Price track",
     "search": "Search"
   },
+  "url_list": {
+    "enable_keys": "Keys",
+    "name": "Url list",
+    "search_text": "url address",
+    "friendly_name": "friendly name"
+  },
   "notepad": {
     "name": "Notepad",
     "placeholder": "Type your notes here…",

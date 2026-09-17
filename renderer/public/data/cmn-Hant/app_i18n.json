@@ -297,6 +297,12 @@
     "name": "價格追蹤",
     "search": "搜索"
   },
+  "url_list": {
+    "enable_keys": "按鍵",
+    "name": "链接",
+    "search_text": "目标网址",
+    "friendly_name": "友好名稱"
+  },
   "stash_search": {
     "enable_keys": "按鍵",
     "name": "倉庫搜尋",
