@@ -5,7 +5,7 @@
     :inline-edit="false"
     move-handles="top-bottom"
   >
-    <div v-if="currentMap" class="widget-default-style p-2 w-[400px]">
+    <div v-if="currentMap" class="widget-default-style p-2 w-[400px] rounded-md opacity-80">
         <span class="inline-block px-2 py-1 rounded-md bg-slate-700 text-slate-100 font-bold">
           {{ currentMap.name }}
         </span>
