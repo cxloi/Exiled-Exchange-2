@@ -14,7 +14,7 @@
       <!-- Sized to the same on-screen height as the capture region (regionHeightVh)
            so each row's `top: Y%` lands next to its actual row in the game panel,
            rather than the rows being stacked top-to-bottom in a separate list. -->
-      <div v-else :style="{ position: 'relative', height: regionHeightVh }">
+      <div v-else :style="{  height: regionHeightVh }">
         <!-- Price first and never truncated (the primary information at a glance);
              name second, smaller/muted and free to truncate - it's only there for
              the edge case of checking what OCR actually recognized, not something
@@ -25,11 +25,11 @@
         <div
           v-for="(row, i) in rows"
           :key="i"
-          class="widget-default-style absolute left-0 w-full flex items-baseline gap-2 px-3 py-1.5 whitespace-nowrap"
+          class="absolute left-0 w-full flex items-baseline gap-2 px-3 py-1.5 whitespace-nowrap"
           :style="rowStyle(row)"
         >
-          <span class="shrink-0 text-lg font-semibold" :class="priceColorClass(row)">{{ row.priceText }}</span>
-          <span class="truncate min-w-0 text-sm text-gray-500">{{ row.quantity }}x {{ row.displayName }}</span>
+          <span class="shrink-0 text-sm font-bold" :class="priceColorClass(row)">{{ row.priceText }}</span>
+          <span class="truncate min-w-0 text-sm text-gray-500 [text-shadow:1px_1px_2px_#000]">{{ row.quantity }}x {{ row.displayName }}</span>
         </div>
       </div>
       <div
@@ -255,7 +255,7 @@ function buildRows(sourceRows: RawRow[]): DisplayRow[] {
       if (resolved) {
         totalValue = resolved.entry.primaryValue * parsed.quantity;
         let priceMeta = formatPrice(resolved.entry.primaryValue, parsed.quantity);
-        priceText = `${priceMeta.val} ${priceMeta.currT}`;
+        priceText = `${priceMeta.val}x ${priceMeta.currT}`;
         switch(priceMeta.curr){
           case "div":
             valueTier = "high"
@@ -299,9 +299,9 @@ function formatPrice(primaryValueDivine: number, quantity: number): PriceFormatP
 }
 
 const VALUE_TIER_CLASS: Record<"high" | "mid" | "low", string> = {
-  high: "rounded-sm bg-white text-red-500 px-1.5",
-  mid: "rounded-sm bg-orange-500 text-[#1a1005] px-1.5",
-  low: "rounded-sm bg-orange-500 text-[#1a1005] px-1.5",
+  high: "rounded-sm bg-white text-red-600 px-1",
+  mid: "rounded-sm bg-orange-700 text-[#fff] px-1",
+  low: "rounded-sm bg-orange-500 text-[#fff] px-1",
 };
 
 function priceColorClass(row: DisplayRow): string {

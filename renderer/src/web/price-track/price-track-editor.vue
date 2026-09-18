@@ -55,7 +55,6 @@ function flatten(data: EnLangEntry[]): string[] {
   return [
     ...new Set(
       data
-        .filter(item => item.namespace !== 'GEM')
         .filter(item => !item.refName?.includes('Runeforged') 
           && !item.refName?.includes('Runemastered') 
           && item.refName != 'INCOMPLETE'
