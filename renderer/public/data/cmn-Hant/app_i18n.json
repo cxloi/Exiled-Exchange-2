@@ -281,6 +281,7 @@
     "reset_key": "重置"
   },
   "expedition_check": {
+    "title": "探险OCR",
     "name": "探險符形查價",
     "scan_key": "掃描符形組合",
     "no_region": "尚未設置截取區域 - 請打開設置進行配置",

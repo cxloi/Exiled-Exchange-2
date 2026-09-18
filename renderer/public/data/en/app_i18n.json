@@ -285,6 +285,7 @@
     "reset_key": "Reset"
   },
   "expedition_check": {
+    "title": "Rune OCR",
     "name": "Expedition Price Check",
     "scan_key": "Scan Runeshape panel",
     "no_region": "No capture region set yet - open settings to configure",

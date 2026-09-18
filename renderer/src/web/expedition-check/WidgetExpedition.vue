@@ -103,6 +103,7 @@ function positionRightOfRegion(region: {
 }
 
 if (props.config.wmFlags[0] === "uninitialized") {
+  props.config.wmTitle = t(":title")
   props.config.mode = "hotkey";
   props.config.hotkey = "Shift + M";
   props.config.region = { ...DEFAULT_REGION };
