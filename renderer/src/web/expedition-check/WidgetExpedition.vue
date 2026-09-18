@@ -28,8 +28,8 @@
           class="absolute left-0 w-full flex items-baseline gap-2 px-3 py-1.5 whitespace-nowrap"
           :style="rowStyle(row)"
         >
-          <span class="shrink-0 text-sm font-bold" :class="priceColorClass(row)">{{ row.priceText }}</span>
-          <span class="truncate min-w-0 text-sm text-gray-500 [text-shadow:1px_1px_2px_#000]">{{ row.quantity }}x {{ row.displayName }}</span>
+          <span class="shrink-0 text-md font-bold" :class="priceColorClass(row)">{{ row.priceText }}</span>
+          <span class="truncate min-w-0 text-md text-gray-500 [text-shadow:1px_1px_2px_#000]">{{ row.quantity }}x {{ row.displayName }}</span>
         </div>
       </div>
       <div
