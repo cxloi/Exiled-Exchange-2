@@ -24,9 +24,9 @@ Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Excha
 1. mac port of OCR, using macOS native engine, currently set to ocr zh-Hans,en-US at the same time
 2. modified win port of OCR to support zh-Hans, limitation on Windows OCR: only one language per call, no mixed zh+en pass, so the lang is pass from app language config
 
-| Mac                                                              | Win                                                              |
-|------------------------------------------------------------------|------------------------------------------------------------------|
-| ![Ocr Mac Port](./renderer/public/images/expedition-macPort.png) | ![Ocr Win Port](./renderer/public/images/expedition-winPort.png) |
+| Mac & Win                                                            | 
+|------------------------------------------------------------------|
+| ![Ocr Port](./renderer/public/images/expedition-rune.png) |
 
 ## Url List Widget
 A url widget shortcut to access resources.
