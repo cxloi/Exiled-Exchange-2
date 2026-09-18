@@ -7,8 +7,11 @@
       <div v-if="config.wmTitle" class="text-gray-100 p-1 flex items-center justify-between gap-4">
         <span class="truncate">{{ config.wmTitle }}</span>
       </div>
-      <div class="flex flex-row px-4 gap-x-5 overflow-x-auto min-h-0">
-        <div v-for="item in itemLs" :key="item.name">
+      <div 
+        class="grid grid-cols-4 px-4 gap-x-5 gap-y-3"
+        :style="{ gridTemplateColumns: `repeat(${Math.min(itemLs.length, 4)}, max-content)` }"
+      >
+        <div v-for="item in itemLs" :key="item.name" class="min-w-0">
           <item-quick-price
             currency-text
             fraction
@@ -16,7 +19,7 @@
             :price="item.price"
             :item-img="item.icon"
           />
-          <div class="text-left text-gray-600 mb-1 whitespace-nowrap overflow-hidden">
+          <div class="text-left text-gray-600 mb-1 whitespace-nowrap overflow-hidden truncate">
             {{ item.name }}
           </div>
         </div>
