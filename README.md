@@ -1,22 +1,22 @@
 <b>For personal gaming currently.</b> Added widgets:
-1. [Campaign guide](#campaign-guide-widget)
-2. [Price track](#price-track-widget)
+1. [Price track](#price-track-widget)
+2. [Campaign guide](#campaign-guide-widget)
 3. [Expedition Rune](#expedition-rune-widget)
 4. [Url list](#url-list-widget)
 
 [Build step](#build-step)
 
+## Price Track Widget
+A price track widget to show pricing. Data from poeninja, toggle exchange rate, search item, filter group, pinned item and spark chart.
+| Top                                                               | Pinned                                                               |
+|-----------------------------------------------------------------------|-----------------------------------------------------------------------|
+| ![Price Track Top](./renderer/public/images/priceTrack-top.png) | ![Price Track Pin](./renderer/public/images/priceTrack-pin.png) |
+
 ## Campaign Guide Widget
-Customisable campaign guide, default instructions only for zh-Hans + en 
+Customisable campaign guide, default instructions only for zh-Hans + en.
 | Setting                                                               | Display                                                               |
 |-----------------------------------------------------------------------|-----------------------------------------------------------------------|
 | ![Campaign Guide Setting](./renderer/public/images/campaignGuide-setting.png) | ![Campaign Guide Result](./renderer/public/images/campaignGuide-result.png)|
-
-## Price Track Widget
-A price track widget to show pricing. Dropdown list comes from `en/items.ndjson`, max 4 item per row.
-| Setting                                                               | Display                                                               |
-|-----------------------------------------------------------------------|-----------------------------------------------------------------------|
-| ![Price Track Search](./renderer/public/images/priceTrack-search.png) | ![Price Track Result](./renderer/public/images/priceTrack-result.png) |
 
 ## Expedition Rune Widget
 Its modified from Endre's [fork](https://github.com/Endre-Tonnessen/Exiled-Exchange-2-Expedition-Checker) project, thanks to his implementation on Windows's OCR. Support zh-Hans translation in expedition widget.
