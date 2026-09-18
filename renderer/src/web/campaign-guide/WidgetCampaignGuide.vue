@@ -58,7 +58,7 @@ import { computed, defineComponent, inject, PropType } from "vue";
 
 import Widget from "../overlay/Widget.vue";
 import { WidgetManager, WidgetSpec } from "../overlay/interfaces.js";
-import { CampaignGuideWidget } from "./widget.js";
+import { CampaignGuideWidget, Map } from "./widget.js";
 import { useI18n } from "vue-i18n";
 import { useClientLog } from "../client-log/client-log.js";
 
@@ -115,6 +115,19 @@ export default defineComponent({
 
     const wm = inject<WidgetManager>("wm")!;
 
+    const { t, tm } = useI18n();
+
+    function tmArray<T>(key: string): T[] {
+      try {
+        const raw = tm(key)
+        return Array.isArray(raw) ? (raw as T[]) : []
+      } catch {
+        return []
+      }
+    }
+
+    const defaultMaps = computed(() => tmArray<Map>('campaign_guide.default_maps'))
+
     if (props.config.wmFlags[0] === "uninitialized") {
       props.config.wmFlags = [];
       props.config.anchor = {
@@ -122,11 +135,10 @@ export default defineComponent({
         x: Math.random() * (40 - 20) + 20,
         y: Math.random() * (40 - 20) + 20,
       };
-      props.config.maps = []
+      props.config.wmTitle = t("campaign_guide.default_title")
+      props.config.maps = defaultMaps.value
       wm.show(props.config.wmId);
     }
-
-    const { t } = useI18n();
 
     const currentMap = computed(() =>
       props.config.maps.find((m) => m.mapId === currentZone.value)
