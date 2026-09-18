@@ -102,7 +102,7 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { playerLevel, setPlayerLevel, areaLevel, zoneName } = useClientLog();
+    const { playerLevel, setPlayerLevel, areaLevel, currentZone } = useClientLog();
 
     const characterLevel = computed({
       get() {
@@ -129,7 +129,7 @@ export default defineComponent({
     const { t } = useI18n();
 
     const currentMap = computed(() =>
-      props.config.maps.find((m) => m.mapId === zoneName.value)
+      props.config.maps.find((m) => m.mapId === currentZone.value)
     );
     
     return {

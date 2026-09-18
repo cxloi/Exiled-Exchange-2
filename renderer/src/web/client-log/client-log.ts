@@ -14,6 +14,7 @@ const LogRegex =
 export const useClientLog = createGlobalState(() => {
   const areaLevel = shallowRef<number>(1);
   const zoneName = shallowRef<string>("G1_1"); // default to riverbank
+  const currentZone = shallowRef<string>(""); // every zone, incl. town/hideout
   const playerLevel = shallowRef<number>(1);
   const lastCharacter = shallowRef<string>("");
   let gameStartMillis = 0;
@@ -51,6 +52,8 @@ export const useClientLog = createGlobalState(() => {
     if (data.type === ClientLogInfoType.GameStart) {
       gameStartMillis = data.ms;
     } else if (data.type === ClientLogInfoType.LoadZone) {
+      currentZone.value = data.zone
+
       // ignore town/hideout for purpose of level tracking
       if (!(data.zone.includes("town") || data.zone.includes("hideout"))) {
         if (data.zone === "g1_1") {
@@ -89,6 +92,7 @@ export const useClientLog = createGlobalState(() => {
     playerLevel: readonly(playerLevel),
     areaLevel: readonly(areaLevel),
     zoneName: readonly(zoneName),
+    currentZone: readonly(currentZone),
     setPlayerLevel,
     testOnlyResetGameMillis,
   };
