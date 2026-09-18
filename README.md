@@ -1,12 +1,19 @@
 <b>For personal gaming currently.</b> Added widgets:
-1. [Price track](#price-track-widget)
-2. [Expedition Rune](#expedition-rune-widget)
-3. [Url list](#url-list-widget)
+1. [Campaign guide](#campaign-guide-widget)
+2. [Price track](#price-track-widget)
+3. [Expedition Rune](#expedition-rune-widget)
+4. [Url list](#url-list-widget)
 
 [Build step](#build-step)
 
+## Campaign Guide Widget
+Customisable campaign guide, default instructions only for zh-Hans + en 
+| Setting                                                               | Display                                                               |
+|-----------------------------------------------------------------------|-----------------------------------------------------------------------|
+| ![Campaign Guide Setting](./renderer/public/images/campaignGuide-setting.png) | ![Campaign Guide Result](./renderer/public/images/campaignGuide-result.png)|
+
 ## Price Track Widget
-A price track widget to show pricing. Dropdown list comes from `en/items.ndjson`.
+A price track widget to show pricing. Dropdown list comes from `en/items.ndjson`, max 4 item per row.
 | Setting                                                               | Display                                                               |
 |-----------------------------------------------------------------------|-----------------------------------------------------------------------|
 | ![Price Track Search](./renderer/public/images/priceTrack-search.png) | ![Price Track Result](./renderer/public/images/priceTrack-result.png) |
