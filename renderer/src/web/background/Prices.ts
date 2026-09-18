@@ -163,7 +163,7 @@ export const usePoeninja = createGlobalState(() => {
   // features that need to iterate every entry of a category (PRICES_DB itself stores
   // each category as an unparsed JSON-substring for its own fast single-item lookup).
   let PARSED_OVERVIEWS: Array<{ type: string; lines: FlatPriceEntry[] }> = [];
-  let lastUpdateTime = 0;
+  const lastUpdateTime = shallowRef(0); // update to shallowRef to support widget reactive
   let downloadController: AbortController | undefined;
   let lastInterestTime = 0;
 
@@ -174,7 +174,7 @@ export const usePoeninja = createGlobalState(() => {
     if (!league || !league.isPopular || league.realm !== "pc-ggg") return;
     if (
       !force &&
-      (Date.now() - lastUpdateTime < UPDATE_INTERVAL_MS ||
+      (Date.now() - lastUpdateTime.value < UPDATE_INTERVAL_MS ||
         Date.now() - lastInterestTime > INTEREST_SPAN_MS)
     )
       return;
@@ -251,7 +251,7 @@ export const usePoeninja = createGlobalState(() => {
       // Clear cache
       priceCache = new Map<string, CurrencyValue>();
 
-      lastUpdateTime = Date.now();
+      lastUpdateTime.value = Date.now();
     } catch (e) {
       console.warn(e);
     } finally {
@@ -488,6 +488,8 @@ export const usePoeninja = createGlobalState(() => {
   return {
     xchgRate: readonly(xchgRate),
     xchgRateCurrency: readonly(selectedCoreCurrency),
+    lastUpdateTime: readonly(lastUpdateTime),
+    isLoading: readonly(isLoading),
     findPriceByQuery,
     getFlatPriceEntries,
     autoCurrency,

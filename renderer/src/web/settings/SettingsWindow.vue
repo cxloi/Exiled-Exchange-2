@@ -143,7 +143,6 @@ import SettingsItemSearch from "../item-search/settings-item-search.vue";
 import SettingsLeveling from "../leveling/settings-leveling.vue";
 import SettingsLibrary from "../library/settings-library.vue";
 import SettingsExpedition from "../expedition-check/settings-expedition.vue";
-import SettingsPriceTrack from "../price-track/price-track-editor.vue";
 import SettingsUrlList from "../url-list/url-list-editor.vue";
 import SettingsCampaignGuide from "../campaign-guide/campaign-guide-editor.vue";
 import { disableWidget, enableWidget, findWidget } from "./utils";
@@ -355,8 +354,6 @@ function menuByType(type?: string) {
       return [[SettingsLibrary]];
     case "expedition-check":
       return [[SettingsExpedition]];
-    case "price-track":
-      return [[SettingsPriceTrack]];
     case "url-list":
       return [[SettingsUrlList]];
     case "campaign-guide":

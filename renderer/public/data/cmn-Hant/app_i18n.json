@@ -295,8 +295,23 @@
     "div": "神聖"
   },
   "price_track": {
-    "name": "價格追蹤",
-    "search": "搜索"
+    "name": "物價追蹤",
+    "search": "搜索",
+    "input": "繁中/英 物品名字",
+    "unit_auto": "自動",
+    "tab_top": "最貴",
+    "tab_pinned": "置頂",
+    "cat_all": "全部",
+    "cat_currency": "通貨",
+    "cat_soul_core": "增幅",
+    "cat_uncut_gem": "未切割",
+    "cat_support_gem": "輔助",
+    "cat_pinnacle_key": "巔峰",
+    "cat_omen": "預兆",
+    "cat_map_fragment": "碎片",
+    "cat_unique": "傳奇",
+    "not_found": "什麼都沒找到",
+    "empty": "點按一個物品加入置頂"
   },
   "url_list": {
     "enable_keys": "按鍵",

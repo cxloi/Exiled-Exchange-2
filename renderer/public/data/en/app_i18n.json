@@ -300,7 +300,22 @@
   },
   "price_track": {
     "name": "Price track",
-    "search": "Search"
+    "search": "Search",
+    "input": "Search by name",
+    "unit_auto": "Auto",
+    "tab_top": "Top",
+    "tab_pinned": "Pinned",
+    "cat_all": "All",
+    "cat_currency": "Currency",
+    "cat_soul_core": "Socketable",
+    "cat_uncut_gem": "Uncut",
+    "cat_support_gem": "Supports",
+    "cat_pinnacle_key": "Pinnacle",
+    "cat_omen": "Omen",
+    "cat_map_fragment": "Fragment",
+    "cat_unique": "Unique",
+    "not_found": "Nothing found",
+    "empty": "Click an item to pin it here"
   },
   "url_list": {
     "enable_keys": "Keys",
