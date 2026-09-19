@@ -283,12 +283,6 @@ export function stat(text: string) {
   return text;
 }
 
-const parseNdjson = <T>(text: string): T[] =>
-  text
-    .split('\n')
-    .filter(line => line.trim())
-    .map(line => JSON.parse(line) as T);
-
 export async function init(lang: string) {
   CLIENT_STRINGS_REF = await loadClientStrings("en");
   ITEM_DROP = await (

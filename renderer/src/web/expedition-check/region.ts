@@ -1,4 +1,10 @@
-import type { ExpeditionCaptureRegion } from "@/web/overlay/widgets";
+export interface ExpeditionCaptureRegion {
+  /** all fields are fractions (0..1) of the game window, not pixels - see cropImageFraction */
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
 
 // A real, user-calibrated starting point (Runeshape Combinations text column) for a
 // freshly-added widget instance - better than an arbitrary guess.

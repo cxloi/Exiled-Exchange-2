@@ -8,6 +8,7 @@ import type { ItemCheckWidget } from "./item-check/widget";
 import type { ItemSearchWidget } from "./item-search/widget";
 import { registry as widgetRegistry } from "./overlay/widget-registry.js";
 import { LibraryWidget } from "./library/widget";
+import { ExpeditionWidget } from "./expedition-check/widget";
 
 const _config = shallowRef<Config | null>(null);
 let _lastSavedConfig: Config | null = null;
@@ -822,7 +823,7 @@ function getConfigForHost(): HostConfig {
         });
       }
     } else if (widget.wmType === "expedition-check") {
-      const expedition = widget as widget.ExpeditionWidget;
+      const expedition = widget as ExpeditionWidget;
       if (
         expedition.mode === "hotkey" &&
         expedition.hotkey &&
