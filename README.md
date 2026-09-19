@@ -1,8 +1,9 @@
 <b>For personal gaming currently.</b> Added widgets:
 1. [Price track](#price-track-widget)
-2. [Campaign guide](#campaign-guide-widget)
-3. [Expedition Rune](#expedition-rune-widget)
-4. [Url list](#url-list-widget)
+2. [Craft steps](#craft-step-widget)
+3. [Campaign guide](#campaign-guide-widget)
+4. [Expedition Rune](#expedition-rune-widget)
+5. [Url list](#url-list-widget)
 
 [Build step](#build-step)
 
@@ -11,6 +12,12 @@ A price track widget to show pricing. Data from poeninja, toggle exchange rate, 
 | Top                                                               | Pinned                                                               |
 |-----------------------------------------------------------------------|-----------------------------------------------------------------------|
 | ![Price Track Top](./renderer/public/images/priceTrack-top.png) | ![Price Track Pin](./renderer/public/images/priceTrack-pin.png) |
+
+## Craft Step Widget
+Craft steps widget can list required currencies pricing, trade basetype, check target price and record craft steps.
+| Setting                                                               | Display                                                               |
+|-----------------------------------------------------------------------|-----------------------------------------------------------------------|
+| ![Craft Setting](./renderer/public/images/craft-setting.png) | ![Craft Result](./renderer/public/images/craft-result.png) |
 
 ## Campaign Guide Widget
 Customisable campaign guide, default instructions only for zh-Hans + en.
