@@ -99,11 +99,11 @@ import {
   configModelValue,
   _configModelValue,
 } from "../settings/utils.js";
-import type { ExpeditionWidget } from "@/web/overlay/widgets";
 import { DEFAULT_REGION } from "./region";
 
 import HotkeysGeneric, { HotkeySchema } from "../settings/HotkeysGeneric.vue";
 import UiCheckbox from "../ui/UiCheckbox.vue";
+import { ExpeditionWidget } from "./widget.js";
 
 const props = defineProps(configProp<ExpeditionWidget>());
 const { t } = useI18nNs("expedition_check");

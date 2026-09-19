@@ -44,6 +44,7 @@
 
 <script lang="ts">
 import type { WidgetSpec } from "../overlay/interfaces";
+import { ExpeditionWidget } from "./widget";
 
 export default {
   widget: {
@@ -60,7 +61,6 @@ import { useI18nNs } from "@/web/i18n";
 import { Host } from "@/web/background/IPC";
 import { displayRounding, usePoeninja } from "@/web/background/Prices";
 import type { WidgetManager } from "../overlay/interfaces";
-import type { ExpeditionWidget } from "../overlay/widgets";
 import Widget from "../overlay/Widget.vue";
 import { parseLine, slug, resolveTwGemKey } from "./parsing";
 import { buildPriceIndex, PriceIndex, resolvePrice } from "./price-match";
