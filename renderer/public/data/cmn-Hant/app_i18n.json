@@ -294,6 +294,20 @@
     "chaos": "混沌",
     "div": "神聖"
   },
+  "crafting": {
+    "name": "製作裝備",
+    "base": "底材",
+    "target": "目標",
+    "modifier": "詞綴",
+    "link_name": "底材名稱",
+    "link_url": "Trade 鏈接",
+    "steps": "步驟",
+    "step_text": "說明步驟",
+    "step_btn_text": "正則名稱",
+    "step_search": "倉庫搜尋字串",
+    "open": "開啟",
+    "empty": "添加步驟"
+  },
   "price_track": {
     "name": "物價追蹤",
     "search": "搜索",

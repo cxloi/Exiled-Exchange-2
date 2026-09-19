@@ -298,6 +298,20 @@
     "chaos": "chaos",
     "div": "div"
   },
+  "crafting": {
+    "name": "Crafting",
+    "base": "Base",
+    "target": "Target",
+    "modifier": "Modifier",
+    "link_name": "Base type",
+    "link_url": "Trade url",
+    "steps": "Steps",
+    "step_text": "Instruction",
+    "step_btn_text": "Regex label",
+    "step_search": "Stash search regex",
+    "open": "Open",
+    "empty": "Add a step"
+  },
   "price_track": {
     "name": "Price track",
     "search": "Search",
