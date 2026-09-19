@@ -305,6 +305,8 @@
     "unit_auto": "Auto",
     "tab_top": "Top",
     "tab_pinned": "Pinned",
+    "hide_filters": "Hide filters",
+    "show_filters": "Show filters",
     "cat_all": "All",
     "cat_currency": "Currency",
     "cat_soul_core": "Socketable",

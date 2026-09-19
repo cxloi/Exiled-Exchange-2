@@ -301,6 +301,8 @@
     "unit_auto": "自動",
     "tab_top": "最貴",
     "tab_pinned": "置頂",
+    "hide_filters": "收起篩選",
+    "show_filters": "展開篩選",
     "cat_all": "全部",
     "cat_currency": "通貨",
     "cat_soul_core": "增幅",
