@@ -1,7 +1,6 @@
 import fnv1a from "@sindresorhus/fnv1a";
 import type {
   BaseType,
-  EnLangEntry,
   DropEntry,
   AugmentDataByAugment,
   AugmentDataByTradeId,
@@ -18,7 +17,6 @@ import { ItemRarity } from "@/parser/ParsedItem";
 
 export * from "./interfaces";
 
-export let ITEM_EN_LANG: EnLangEntry[];
 export let ITEM_DROP: DropEntry[];
 export let CLIENT_STRINGS: TranslationDict;
 export let CLIENT_STRINGS_REF: TranslationDict;
@@ -293,9 +291,6 @@ const parseNdjson = <T>(text: string): T[] =>
 
 export async function init(lang: string) {
   CLIENT_STRINGS_REF = await loadClientStrings("en");
-  ITEM_EN_LANG = parseNdjson<EnLangEntry>(await await (
-    await fetch(`${import.meta.env.BASE_URL}data/en/items.ndjson`)
-  ).text());
   ITEM_DROP = await (
     await fetch(`${import.meta.env.BASE_URL}data/item-drop.json`)
   ).json();
