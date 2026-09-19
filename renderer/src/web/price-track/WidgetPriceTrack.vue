@@ -107,7 +107,10 @@
             />
             <span v-else class="text-gray-500">?</span>
           </div>
-          <div class="flex-1 min-w-0 text-left truncate">
+          <div
+            class="flex-1 min-w-0 text-left truncate"
+            :title="row.variant ? `${row.name} — ${row.variant}` : row.name"
+          >
             {{ row.name }}
             <span v-if="row.variant" class="text-gray-600">
               {{ row.variant }}
