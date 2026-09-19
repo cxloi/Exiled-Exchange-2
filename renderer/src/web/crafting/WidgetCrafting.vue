@@ -2,15 +2,20 @@
   <Widget :config="config" move-handles="corners" :inline-edit="false">
     <div
       class="widget-default-style flex flex-col p-1 gap-1 min-h-0"
-      style="width: 23rem; max-height: 40rem"
+      style="width: 23rem; max-height: 45rem"
     >
       <!-- reuse price track -->
       <div class="flex-1 flex flex-col min-h-0 bg-gray-800 rounded">
-        <PriceTrackPanel :data="config" :is-shown="isShown" />
+        <PriceTrackPanel 
+          :data="config"
+          :is-shown="isShown"
+          init-mode="pinned"
+          :init-compact="true"
+        />
       </div>
 
       <!-- base | target | modifier -->
-      <div class="grid grid-cols-3 gap-0.5 px-1 shrink-0">
+      <div class="grid grid-cols-3 gap-0.5 px-1 pt-2 shrink-0">
         <button
           v-for="slot in LINK_SLOTS"
           :key="slot"
@@ -25,18 +30,18 @@
             <img v-if="slot=='modifier'" class="w-4 h-4" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBzdHlsZT0iaGVpZ2h0OiA1MTJweDsgd2lkdGg6IDUxMnB4OyI+PHBhdGggZD0iTTAgMGg1MTJ2NTEySDB6IiBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMDEiPjwvcGF0aD48ZyBjbGFzcz0iIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLDApIiBzdHlsZT0iIj48cGF0aCBkPSJNMzczLjU2MyAxOC40MDZjLTE1LjYxNi0uMTY3LTI3LjkxIDQuNjIyLTMyLjU2MyAxNC43NS0yMi43NzggNDkuNjA1LTQ4Ljc0MyA4Ny4xNC03OS4wOTQgMTE3LjI4YTYyLjgxNiA2Mi44MTYgMCAwIDEgOC45MzggMy43ODNjMTIuOTg3IDYuNzA4IDI1LjI2OCAxNy43OCAzNS4zMTIgMzAuODQzIDEwLjA0NCAxMy4wNjIgMTcuODUgMjguMTE0IDIwLjc4IDQzLjUuNzQ2IDMuOTA4IDEuMTYgNy44ODUgMS4xNTggMTEuODQzIDM4Ljk3LTI0LjM2IDg1LjA1OC00MS4yMjMgMTQwLjg3NS01MS4zMTIgMTQuOTEtMi42OTcgMjMuNjUyLTI4LjYzMiAyMS40MDUtNTguNjU2bC0zNS4xNTYtMSAzMC41Ni0yNC44MTNjLTQuMTQ4LTE0LjUwNy0xMS4wMTMtMjguNzU0LTIxLjE1NS00MC43Mi0xNS41MjgtMTguMzE0LTM2LjQzLTMxLjM3Ni01Ni43Mi0zOC42ODZMMzgxLjk0IDQwLjgxMmwyLjgxMi0yMS41Yy0zLjg3NS0uNTUtNy42MS0uODctMTEuMTg4LS45MDd6TTI0Ni45MzggMTY2LjU2MmMtMS4wNjMuMDUyLTIuMDYuMjI2LTMgLjQ3LTExLjk3NiAxMC4yNTQtMjQuNjEgMTkuNTk3LTM3LjkzOCAyOC4yOC44NDIuMzMgMS42Ny42NjcgMi41IDEuMDMyIDE0LjEyMyA2LjE5MiAyNy40MzggMTcuMTQ1IDM4LjQ3IDMwLjYyNSAxMy4zNTYgMTYuMzIyIDIzLjYyIDM2Ljk0IDI1LjYyNCA1Ny43NSAxMC4zMzQtMTAuMzY3IDIxLjI0LTE5Ljk0MyAzMi44NDQtMjguNzIgNC4wOTYtNi41NTUgNC45My0xNC40NjggMy4xMjUtMjMuOTM4LTIuMTg0LTExLjQ2LTguNjQyLTI0LjQzLTE3LjI1LTM1LjYyNS04LjYxLTExLjE5NC0xOS4zOC0yMC42MjItMjkuMDYzLTI1LjYyNS02LjA1Mi0zLjEyNi0xMS4xNTQtNC40NS0xNS4zMTMtNC4yNXptLTYxLjkwNyA0My4yODJjLTEuMzg1LjA1My0yLjY5LjI3LTMuOTY4LjU2Mi0zNyAyMC43NjItNzkuMDg4IDM3Ljk4NS0xMjcuMzEyIDU2IC41NzQuMDQyIDEuMTQuMDkzIDEuNzIuMTU2IDEwLjYyNyAxLjE1NiAyMS4wNzYgNS4wMDggMzEuMTU1IDEwLjg3NUwxMjQuMzEzIDI2MSAxMDguNSAyOTMuNzJjNS45OTUgNS40MzIgMTEuODAzIDExLjQ3NyAxNy4zNDQgMTggMjAuNzYgMjQuNDM0IDM3Ljk2NCA1NS44NjUgNDcuMDk0IDg4LjA5Mi4wMDIuMDEtLjAwMy4wMjIgMCAuMDMyIDIuOTggMTAuNTA4IDUuMTEgMjAuOTE2IDYuMzEyIDMxIDIwLjk5LTQ4LjQzOCA0NC4zOC04OS4yNiA3Mi4zNDQtMTIzIDcuMy0yMS40OC0yLjE4Ni00OC40MDgtMTkuMDYzLTY5LjAzLTkuNDQtMTEuNTM4LTIwLjk3Ni0yMC43MTgtMzEuNTMtMjUuMzQ1LTUuOTM2LTIuNjA0LTExLjI3LTMuODA4LTE1Ljk3LTMuNjI2em0xNDEuNjI2IDU0Ljg0NGMtNy4zMSA1LjA1LTE0LjQ2MiAxMC41MS0yMS40MzcgMTYuMzEyIDM5LjE2IDkuMjYgNjAuOTUzIDM1LjcyMiA4MC42NTUgNjIuMTU2IDEwLjQ2NCAxNC4wNCAyMC41OTggMjguMTEgMzMuMTI1IDQwLjY4OCAyNC4xOSA5LjE0NyA0My4xNyA2LjM4IDYzLjkwNi0xNC45MzgtOTIuMTY1LTI3Ljc4LTk2LjExLTkyLjYxLTE1Ni4yNS0xMDQuMjJ6TTQ4LjU5NCAyODQuOTA2Yy0xMC44NzMuMjI1LTE4LjI2IDUuNzU1LTIzLjM0NCAxNi41OTQtNS44MSAxMi4zODctNy4xMTQgMzIuNDcuNDM4IDU3LjA2MyA1Ljc1IDE4LjczIDE2LjUyIDM3LjcxOCAyOC43NSA1MS42MjUgMTIuMjMgMTMuOTA2IDI1LjkgMjIuMDc2IDM1LjM3NCAyMi40MDZoLjAzMmMzLjcxNy4xMyA2LjU1My0uNjgyIDguODEyLTIuNzVsLS4xODctLjE4OCAyLjA5My0yLjA5NGMuNzkzLTEuMTY4IDEuNTItMi41NDggMi4xODctNC4xODcgMi44MS02LjkgMy4yOC0xOC41NTItMS44NDQtMzMtNi44ODUtMTkuNDE3LTE5LjEyLTMxLjkzMi0zMy4zNzUtMzQuNzhsLTIyLjk2OC00LjU2NCAxOS44MTMtMTIuNSAzOC40Ny0yNC4xODZjLTE2LjY1LTE2LjgyMi0zNC41NS0yNy42MDctNDkuMzc2LTI5LjIyLTEuNy0uMTg0LTMuMzIzLS4yNS00Ljg3Ni0uMjE4em0yMzYuMjUgNS40MDYtMjQuNTMgMjUuMzc1YzEwMC40NDIgMTcuODc4IDU1LjQ1IDE0MS4wMDUgMTU5LjMxIDE3Ni4xODhsLTI0Ljc4LTU3LjI4YzMyLjc2NiAxNi4xNSA2Ny4zOSAyMi42MjMgOTcuNzIgMTIuMDMtMTM1Ljc3LTQxLjk0OC05Ni4zMi0xMjYuOTgzLTIwNy43Mi0xNTYuMzEzem0tMTY5LjQ3IDM4LjIyLTI1Ljk2OCAxNi4zNDNjMTMuMTggOC41IDIzLjIxIDIyLjU2NSAyOS4xMjUgMzkuMjUgMi41NyA3LjI0NCA0LjEzMyAxNC4yMDUgNC43NSAyMC43OGwyMy40NC0yMy4zNzRjLTguMDgtMTkuMTktMTkuMDM1LTM3LjU2Ni0zMS4zNDUtNTN6bTM4LjM3NiA3Mi4zNzQtNDIuMDYzIDQyLS4xNTYtLjE1NmMtNC4yNTUgMy45NDItOS40NTYgNi43NjUtMTUuMTg2IDcuOTM4IDIzLjI2OCAxNC44NzMgNDQuNjQ0IDE5LjM0NiA1Ni44MTIgOS41NjIgNC4yNi0zLjQyNiA3LjA0My04LjM2IDguNDctMTQuNDA2LS40MS0xMi42ODQtMi42MDItMjYuNjE1LTYuNjU3LTQwLjkwNi0uMzgyLTEuMzQ2LS44MDYtMi42ODYtMS4yMi00LjAzMnoiIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMSI+PC9wYXRoPjwvZz48L3N2Zz4="/>
           </span>
           <span class="text-gray-600 text-xs">{{ t(`:${slot}`) }}</span>
-          <span v-if="slot!=='modifier'" :class="$style.linkName">{{ config[slot].name || "?" }}</span>
+          <span :class="$style.linkName">{{ config[slot].name || "?" }}</span>
         </button>
       </div>
 
       <!-- steps -->
-      <div v-if="!config.steps.length" class="text-center text-gray-600 p-2">
+      <div v-if="!config.steps.length" class="text-center text-gray-600 px-4 py-2">
         <i class="fas fa-exclamation-triangle" />
         {{ t(":empty") }}
       </div>
       <div
         v-if="config.steps.length"
-        class="flex flex-col gap-y-0.5 overflow-y-auto min-h-0 px-4"
+        class="flex flex-col gap-y-0.5 overflow-y-auto min-h-0 px-4 py-2"
       >
         <div
           v-for="(step, idx) in config.steps"
@@ -160,7 +165,7 @@ function stashSearch(text: string) {
 }
 
 .stepBtn {
-  @apply shrink-0 rounded bg-gray-900 p-0.5 px-1.5 leading-5;
+  @apply shrink-0 rounded bg-gray-900 p-0.5 px-1.5 leading-5 rounded border;
   @apply text-gray-100;
   overflow: hidden;
   white-space: nowrap;

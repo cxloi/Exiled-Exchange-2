@@ -100,6 +100,7 @@
         v-for="row in rows"
         :key="row.id"
         :class="$style.row"
+        :disabled="compact && isPinned(row.id)"
         @click="togglePin(row.id)"
       >
         <div class="w-8 h-8 flex items-center justify-center shrink-0">
@@ -139,7 +140,7 @@
             :price="toPrice(row.value)"
           />
         </div>
-        <i
+        <i v-if="!compact"
           class="fas fa-thumbtack w-4 shrink-0"
           :class="isPinned(row.id) ? 'text-gray-100' : 'text-gray-700'"
         />
@@ -173,6 +174,8 @@ import PriceSparkline from "./PriceSparkline.vue";
 const props = defineProps<{
   data: PriceTrackData;
   isShown: boolean;
+  initMode?: "top" | "pinned";
+  initCompact?: boolean;
 }>();
 
 const { t } = useI18nNs("price_track");
@@ -203,10 +206,10 @@ interface Row {
 }
 
 const search = shallowRef("");
-const mode = shallowRef<"top" | "pinned">("top");
+const mode = shallowRef<"top" | "pinned">(props.initMode ?? "top");
 const groupFilter = shallowRef<string>("all");
 
-const compact = computed(() => props.data.compact ?? false);
+const compact = shallowRef(props.initCompact ?? props.data.compact ?? false);
 const limit = computed(() => props.data.limit ?? 10);
 const unit = computed<DisplayUnit>(() => props.data.unit ?? "auto");
 const isSearching = computed(() => search.value.trim().length > 0);
@@ -341,6 +344,7 @@ function toggleCompact() {
   const next = !compact.value;
   // force clear search
   if (next) search.value = "";
+  compact.value = next;
   props.data.compact = next;
 }
 
@@ -351,6 +355,7 @@ function togglePin(id: string) {
   const entries = props.data.entries;
   const idx = entries.findIndex((entry) => entry.text === id);
   if (idx !== -1) {
+    if (compact.value) return; // collapsed, block unpin
     entries.splice(idx, 1);
   } else {
     entries.push({
@@ -382,7 +387,7 @@ function hasIcon(icon: string) {
   @apply flex items-center gap-x-1 px-1 py-0.5 rounded;
   @apply text-gray-400;
 
-  &:hover {
+  &:hover:not(:disabled) {
     @apply bg-gray-800 text-gray-100;
   }
 }

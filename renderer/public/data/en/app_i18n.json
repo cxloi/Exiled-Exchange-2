@@ -303,7 +303,7 @@
     "base": "Base",
     "target": "Target",
     "modifier": "Modifier",
-    "link_name": "Base type",
+    "link_name": "Info",
     "link_url": "Trade url",
     "steps": "Steps",
     "step_text": "Instruction",
