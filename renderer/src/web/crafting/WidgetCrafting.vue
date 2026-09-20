@@ -52,6 +52,21 @@
           />
           <div :class="$style.unitBar">
             <button
+              class="mr-1"
+              :class="$style.unitBtn"
+              :disabled="!config[side.key].url || side.loading"
+              :title="side.error || t(':refresh')"
+              @click="refreshPrice(side)"
+            >
+              <i
+                class="fas fa-sync-alt text-xs"
+                :class="{
+                  'fa-spin': side.loading,
+                  'text-red-500': side.error && !side.loading,
+                }"
+              />
+            </button>
+            <button
               v-for="o in CALC_UNITS"
               :key="o.id"
               :class="[$style.unitBtn, { border: side.unit === o.id }]"
@@ -134,7 +149,13 @@ export default {
 import { computed, inject, reactive, ref } from "vue";
 import { MainProcess } from "@/web/background/IPC";
 import type { WidgetManager } from "../overlay/interfaces.js";
-import { LINK_SLOTS, emptyLink, type CraftingWidget } from "./widget.js";
+import {
+  LINK_SLOTS,
+  emptyLink,
+  type CraftingWidget,
+  type LinkSlot,
+} from "./widget.js";
+import { fetchFirstListingPrice } from "./trade-price.js";
 import { useI18nNs } from "@/web/i18n";
 import Widget from "../overlay/Widget.vue";
 import PriceTrackPanel from "../price-track/PriceTrackPanel.vue";
@@ -150,8 +171,21 @@ const { t } = useI18nNs("crafting");
 // all for local profit calc
 const panel = ref<InstanceType<typeof PriceTrackPanel> | null>(null);
 const CALC_UNITS = DISPLAY_UNITS.filter((o) => o.id !== "auto");
-const calcBase = reactive({ key: "base", value: 0, unit: "div" as DisplayUnit });
-const calcTarget = reactive({ key: "target", value: 0, unit: "div" as DisplayUnit });
+const calcBase = reactive({
+  key: "base" as LinkSlot,
+  value: 0,
+  unit: "div" as DisplayUnit,
+  loading: false,
+  error: "",
+});
+const calcTarget = reactive({
+  key: "target" as LinkSlot,
+  value: 0,
+  unit: "div" as DisplayUnit,
+  loading: false,
+  error: "",
+});
+type CalcSide = typeof calcBase;
 const calcSides = [calcBase, calcTarget];
 const calcOut = ref<DisplayUnit>("div");
 const rateOf = (id: DisplayUnit) => panel.value?.rateOf(id) ?? 1;
@@ -206,6 +240,37 @@ function openUrl(url: string) {
     + encodeURIComponent(league.id) + "/"
     + url, "_blank");
 }
+
+// pull the cheapest behind the slot url into the input
+async function refreshPrice(side: CalcSide) {
+  const url = props.config[side.key].url;
+  if (!url || side.loading) return;
+
+  side.loading = true;
+  side.error = "";
+  try {
+    const price = await fetchFirstListingPrice(url, leagues.selected.value?.id);
+    if (!price) {
+      side.error = t(":refresh_empty");
+      return;
+    }
+    if (price.unit) {
+      // side unit is the one toggle ui
+      side.unit = price.unit;
+      side.value = round(price.amount);
+    } else if (price.divValue !== undefined) {
+      side.value = round(price.divValue / rateOf(side.unit));
+    } else {
+      side.error = t(":refresh_currency", [price.currency]);
+    }
+  } catch (err) {
+    side.error = (err as Error).message;
+  } finally {
+    side.loading = false;
+  }
+}
+
+const round = (n: number) => Math.round(n * 100) / 100;
 
 function stashSearch(text: string) {
   MainProcess.sendEvent({
@@ -265,6 +330,18 @@ function stashSearch(text: string) {
 .numInput {
   @apply w-full min-w-0 h-6 rounded bg-gray-900 text-center text-gray-100 text-lg;
   &::-webkit-inner-spin-button { display: none; }
+}
+.refreshBtn {
+  @apply h-6 w-5 flex items-center justify-center rounded;
+  @apply text-gray-600;
+
+  &:hover:not(:disabled) {
+    @apply text-gray-100 bg-gray-700;
+  }
+
+  &:disabled {
+    @apply opacity-40;
+  }
 }
 .profitBox {
   @apply w-full h-6 flex items-center justify-center rounded bg-gray-900 overflow-hidden;

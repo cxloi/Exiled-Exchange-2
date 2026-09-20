@@ -310,7 +310,10 @@
     "step_btn_text": "Regex label",
     "step_search": "Stash search regex",
     "open": "Open",
-    "empty": "Add a step"
+    "empty": "Add a step",
+    "refresh": "Fill cheapest listing",
+    "refresh_empty": "No priced listing found",
+    "refresh_currency": "Unknown currency: {0}"
   },
   "price_track": {
     "name": "Price track",

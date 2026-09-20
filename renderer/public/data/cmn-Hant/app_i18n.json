@@ -306,7 +306,10 @@
     "step_btn_text": "正則名稱",
     "step_search": "倉庫搜尋字串",
     "open": "開啟",
-    "empty": "添加步驟"
+    "empty": "添加步驟",
+    "refresh": "搜最便宜",
+    "refresh_empty": "沒人賣",
+    "refresh_currency": "未知通貨{0}"
   },
   "price_track": {
     "name": "物價追蹤",
