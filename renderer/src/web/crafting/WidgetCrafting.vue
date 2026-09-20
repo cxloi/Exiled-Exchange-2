@@ -139,10 +139,12 @@ import { useI18nNs } from "@/web/i18n";
 import Widget from "../overlay/Widget.vue";
 import PriceTrackPanel from "../price-track/PriceTrackPanel.vue";
 import { DISPLAY_UNITS, type DisplayUnit } from "../price-track/widget.js";
+import { useLeagues } from "@/web/background/Leagues";
 
 const props = defineProps<{ config: CraftingWidget }>();
 
 const wm = inject<WidgetManager>("wm")!;
+const leagues = useLeagues();
 const { t } = useI18nNs("crafting");
 
 // all for local profit calc
@@ -194,7 +196,11 @@ if (props.config.wmFlags[0] === "uninitialized") {
 
 function openUrl(url: string) {
   if (!url) return;
-  window.open(url, "_blank");
+  const league = leagues.selected.value;
+  if(!league) return;
+  window.open("https://www.pathofexile.com/trade2/search/poe2/"
+    + encodeURIComponent(league.id) + "/"
+    + url, "_blank");
 }
 
 function stashSearch(text: string) {

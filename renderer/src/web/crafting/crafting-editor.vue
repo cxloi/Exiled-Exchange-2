@@ -24,7 +24,6 @@
           v-model="configWidget[slot].url"
           :placeholder="t('crafting.link_url')"
           class="rounded px-1 leading-6"
-          :class="isBadUrl(configWidget[slot].url) ? 'bg-red-800' : 'bg-gray-900'"
         />
       </div>
     </div>
@@ -101,9 +100,6 @@ export default defineComponent({
       LINK_SLOTS,
       title: configModelValue(() => props.configWidget, "wmTitle"),
       steps: configModelValue(() => props.configWidget, "steps"),
-      isBadUrl(url: string) {
-        return url.length > 0 && !/^https?:\/\//i.test(url);
-      },
       removeStep(id: number) {
         props.configWidget.steps = props.configWidget.steps.filter(
           (_) => _.id !== id,
