@@ -14,7 +14,7 @@ A price track widget to show pricing. Data from poeninja, toggle exchange rate, 
 | ![Price Track Top](./renderer/public/images/priceTrack-top.png) | ![Price Track Pin](./renderer/public/images/priceTrack-pin.png) |
 
 ## Craft Step Widget
-Craft steps widget can list required currencies pricing, trade basetype, check target price and record craft steps.
+Craft steps widget can list required currencies pricing, trade basetype, check target price, calc rough profit and record craft steps.
 | Setting                                                               | Display                                                               |
 |-----------------------------------------------------------------------|-----------------------------------------------------------------------|
 | ![Craft Setting](./renderer/public/images/craft-setting.png) | ![Craft Result](./renderer/public/images/craft-result.png) |
