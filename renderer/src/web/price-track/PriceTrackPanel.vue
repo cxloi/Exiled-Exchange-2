@@ -103,92 +103,96 @@
     </div>
 
     <!-- rows -->
-    <div class="flex flex-col my-2 overflow-y-auto min-h-0">
-      <button
-        v-for="row in rows"
-        :key="row.id"
-        :class="$style.row"
-        :disabled="compact && isPinned(row.id)"
-        @click="togglePin(row.id)"
-      >
-        <div class="w-6 h-6 flex items-center justify-center shrink-0">
-          <ui-item-img
-            v-if="hasIcon(row.icon)"
-            :icon="row.icon"
-            overflow-hidden
-          />
-          <span v-else class="text-gray-500">?</span>
-        </div>
-        <div
-          class="flex-1 min-w-0 text-left truncate"
-          :title="row.variant ? `${row.name} — ${row.variant}` : row.name"
+    <div class="flex flex-col my-2 overflow-y-auto ">
+      <div v-for="row in rows" :key="row.id" class="flex items-center gap-x-1">
+        <button
+          :class="$style.row"
+          class="flex-1 min-w-0"
+          :disabled="compact && isPinned(row.id)"
+          @click="togglePin(row.id)"
         >
-          {{ row.name }}
-          <span v-if="row.variant" class="text-gray-600">
-            {{ row.variant }}
-          </span>
-        </div>
-        <price-sparkline :data="row.spark" :change="row.change" />
-        <div
-          class="text-right text-xs shrink-0"
-          :class="row.change >= 0 ? 'text-green-500' : 'text-red-500'"
-        >
-          {{
-            row.change
-              ? `${row.change > 0 ? "+" : ""}${row.change.toFixed(0)}%`
-              : ""
-          }}
-        </div>
-        <div class="w-24 shrink-0 flex justify-end">
-          <item-quick-price
-            currency-text
-            fraction
-            :show-img="false"
-            :show-arrow="false"
-            :price="toPrice(row.value)"
+          <div class="w-6 h-6 flex items-center justify-center shrink-0">
+            <ui-item-img
+              v-if="hasIcon(row.icon)"
+              :icon="row.icon"
+              overflow-hidden
+            />
+            <span v-else class="text-gray-500">?</span>
+          </div>
+          <div
+            class="flex-1 min-w-0 text-left truncate"
+            :title="row.variant ? `${row.name} — ${row.variant}` : row.name"
+          >
+            {{ row.name }}
+            <span v-if="row.variant" class="text-gray-600">
+              {{ row.variant }}
+            </span>
+          </div>
+          <price-sparkline :data="row.spark" :change="row.change" />
+          <div
+            class="text-right text-xs shrink-0"
+            :class="row.change >= 0 ? 'text-green-500' : 'text-red-500'"
+          >
+            {{
+              row.change
+                ? `${row.change > 0 ? "+" : ""}${row.change.toFixed(0)}%`
+                : ""
+            }}
+          </div>
+          <div class="w-24 shrink-0 flex justify-end">
+            <item-quick-price
+              currency-text
+              fraction
+              :show-img="false"
+              :show-arrow="false"
+              :price="toPrice(row.value)"
+            />
+          </div>
+          <i v-if="!compact"
+            class="fas fa-thumbtack w-4 shrink-0"
+            :class="isPinned(row.id) ? 'text-gray-100' : 'text-gray-700'"
           />
-        </div>
-        <i v-if="!compact"
-          class="fas fa-thumbtack w-4 shrink-0"
-          :class="isPinned(row.id) ? 'text-gray-100' : 'text-gray-700'"
+        </button>
+
+        <input
+          v-if="showCount && mode === 'pinned' && !isSearching && isPinned(row.id)"
+          :value="countOf(row.id)"
+          type="number"
+          min="0"
+          step="1"
+          :class="$style.countInput"
+          @input="setCount(row.id, ($event.target as HTMLInputElement).value)"
+          @click.stop
         />
-      </button>
+      </div>
 
       <div v-if="!rows.length" class="text-center text-gray-600 p-4">
         <i class="fas fa-exclamation-triangle" />
         {{ isSearching ? t(":not_found") : t(":empty") }}
       </div>
     </div>
+  </div>
 
-    <!-- pinned total -->
-    <div
-      v-if="showSum"
-      class="flex items-center px-1 py-1 border-t border-white shrink-0 mt-auto"
-    >
-      <div class="w-8 shrink-0 flex justify-center text-gray-600">
-        <i class="fas fa-equals text-sm" />
-      </div>
-      <div class="flex-1 min-w-0 truncate text-gray-400">
-        {{ t(":sum_pinned") }}
-        <span class="text-gray-600">({{ pinnedSum.counted }})</span>
-      </div>
-      <div
-        v-if="pinnedSum.missing"
-        class="text-xs text-gray-600 shrink-0"
-        :title="t(':sum_missing')"
-      >
-        +{{ pinnedSum.missing }}?
-      </div>
-      <div class="w-24 shrink-0 flex justify-end">
-        <item-quick-price
-          currency-text
-          fraction
-          :show-img="false"
-          :show-arrow="false"
-          :price="toPrice(pinnedSum.total)"
-        />
-      </div>
+  <!-- pinned total -->
+  <div
+    v-if="data.showSum && pinnedRows.length"
+    class="flex items-center gap-1 px-1 py-1 border-t border-gray-700"
+  >
+    <span class="ml-2 flex-1 text-gray-600 text-sm items-center h-4">{{ t(":sum") }}</span>
+    <div class="w-24 shrink-0 flex justify-end">
+      <item-quick-price
+        currency-text fraction :show-img="false" :show-arrow="false"
+        :price="toPrice(sumDiv)"
+      />
     </div>
+    <button
+      class="rounded bg-gray-900 px-1 h-6 flex items-center shrink-0"
+      :class="{ border: showCount }"
+      :title="t(showCount ? ':hide_count' : ':show_count')"
+      @click="showCount = !showCount"
+    >
+      <i class="fas fa-list-ol w-4 text-sm" :class="showCount ? '' : 'text-gray-600'" />
+    </button>
   </div>
 </template>
 
@@ -362,6 +366,29 @@ const pinnedSum = computed(() => {
   return { total, counted, missing };
 });
 
+
+// expose sum to outside to calc profit
+const showCount = shallowRef(false);
+function entryOf(id: string) {
+  return props.data.entries.find((entry) => entry.text === id);
+}
+function countOf(id: string) {
+  return entryOf(id)?.count ?? 1;
+}
+function setCount(id: string, raw: string) {
+  const entry = entryOf(id);
+  if (!entry) return;
+  const n = Math.max(0, Math.floor(Number(raw) || 0));
+  entry.count = n; // persisted
+}
+const sumDiv = computed(() => // sum of pinned rows × count, in divine
+  pinnedRows.value.reduce((acc, row) => acc + row.value * countOf(row.id), 0),
+);
+function rateOf(id: DisplayUnit) {
+  return rates.value[id] || 1;
+}
+defineExpose({ sumDiv, rates, rateOf, toPrice });
+
 function toggleSum() {
   showSum.value = !showSum.value;
   props.data.showSum = showSum.value;
@@ -420,6 +447,7 @@ function togglePin(id: string) {
     entries.push({
       id: Math.max(0, ...entries.map((entry) => entry.id)) + 1,
       text: id,
+      count: 1,
     });
   }
 }
@@ -449,5 +477,10 @@ function hasIcon(icon: string) {
   &:hover:not(:disabled) {
     @apply bg-gray-800 text-gray-100;
   }
+}
+
+.countInput {
+  @apply w-9 shrink-0 h-6 rounded bg-gray-900 px-1 text-center text-gray-100;
+  &::-webkit-inner-spin-button { display: none; }
 }
 </style>

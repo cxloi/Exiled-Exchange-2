@@ -1,12 +1,17 @@
 <template>
   <Widget :config="config" move-handles="corners" :inline-edit="false">
     <div
-      class="widget-default-style flex flex-col p-1 gap-1 min-h-0"
+      class="widget-default-style flex flex-col p-1 min-h-0"
       style="width: 23rem; max-height: 45rem"
     >
-      <!-- reuse price track -->
-      <div class="flex-1 flex flex-col min-h-0 border rounded">
-        <PriceTrackPanel 
+      <!-- minHeight to handle too overpush -->
+      <div 
+        class="flex-1 flex flex-col min-h-0 border rounded"
+        :style="{ minHeight: !config.compact ? '20rem' : '10rem' }"
+      >
+         <!--  ref to get exposed currency sum -->
+        <PriceTrackPanel
+          ref="panel"
           :data="config"
           :is-shown="isShown"
           init-mode="pinned"
@@ -33,6 +38,51 @@
           
           <span :class="$style.linkName">{{ config[slot].name || "?" }}</span>
         </button>
+      </div>
+
+      <!-- profit calc (local only, not persisted) -->
+      <div class="grid grid-cols-3 gap-0.5 pb-1 shrink-0 relative">
+        <!-- base / target -->
+        <div v-for="side in calcSides" :key="side.key" class="flex flex-col gap-0.5 min-w-0">
+          <input
+            v-model.number="side.value"
+            type="number"
+            step="any"
+            :class="$style.numInput"
+          />
+          <div :class="$style.unitBar">
+            <button
+              v-for="o in CALC_UNITS"
+              :key="o.id"
+              :class="[$style.unitBtn, { border: side.unit === o.id }]"
+              :title="o.id"
+              @click="side.unit = o.id"
+            >
+              <img :src="o.icon" class="w-4 h-4" :class="{ 'opacity-40': side.unit !== o.id }" />
+            </button>
+          </div>
+        </div>
+
+        <!-- profit -->
+        <div class="flex flex-col gap-0.5 min-w-0">
+          <div
+            :class="[$style.profitBox, profit >= 0 ? 'text-green-500' : 'text-red-500']"
+            :title="`${fmt(toUnit(toDiv(calcTarget)))} − ${fmt(toUnit(toDiv(calcBase)))} − ${fmt(toUnit(sumDiv))}`"
+          >
+            {{ fmt(profit) }}
+          </div>
+          <div :class="$style.unitBar">
+            <button
+              v-for="o in CALC_UNITS"
+              :key="o.id"
+              :class="[$style.unitBtn, { border: calcOut === o.id }]"
+              :title="o.id"
+              @click="calcOut = o.id"
+            >
+              <img :src="o.icon" class="w-4 h-4" :class="{ 'opacity-40': calcOut !== o.id }" />
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- steps -->
@@ -81,20 +131,38 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { computed, inject } from "vue";
+import { computed, inject, reactive, ref } from "vue";
 import { MainProcess } from "@/web/background/IPC";
 import type { WidgetManager } from "../overlay/interfaces.js";
 import { LINK_SLOTS, emptyLink, type CraftingWidget } from "./widget.js";
 import { useI18nNs } from "@/web/i18n";
 import Widget from "../overlay/Widget.vue";
 import PriceTrackPanel from "../price-track/PriceTrackPanel.vue";
+import { DISPLAY_UNITS, type DisplayUnit } from "../price-track/widget.js";
 
 const props = defineProps<{ config: CraftingWidget }>();
 
 const wm = inject<WidgetManager>("wm")!;
 const { t } = useI18nNs("crafting");
 
-// this widget stay on top, so this stays true while it is shown
+// all for local profit calc
+const panel = ref<InstanceType<typeof PriceTrackPanel> | null>(null);
+const CALC_UNITS = DISPLAY_UNITS.filter((o) => o.id !== "auto");
+const calcBase = reactive({ key: "base", value: 0, unit: "div" as DisplayUnit });
+const calcTarget = reactive({ key: "target", value: 0, unit: "div" as DisplayUnit });
+const calcSides = [calcBase, calcTarget];
+const calcOut = ref<DisplayUnit>("div");
+const rateOf = (id: DisplayUnit) => panel.value?.rateOf(id) ?? 1;
+const toDiv = (x: { value: number; unit: DisplayUnit }) =>
+  (Number(x.value) || 0) * rateOf(x.unit);
+const toUnit = (div: number) => div / rateOf(calcOut.value);
+const sumDiv = computed(() => panel.value?.sumDiv ?? 0);
+const profit = computed(() =>
+  toUnit(toDiv(calcTarget) - toDiv(calcBase) - sumDiv.value),
+);
+const fmt = (n: number) => // round up
+  Number.isFinite(n) ? (Math.round(n * 100) / 100).toString() : "0";
+
 const isShown = computed(
   () =>
     props.config.wmWants === "show" &&
@@ -177,5 +245,25 @@ function stashSearch(text: string) {
   &:hover {
     @apply bg-gray-700;
   }
+}
+
+.calcOp {
+  @apply absolute top-0 h-6 flex items-center text-gray-500;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.numInput {
+  @apply w-full min-w-0 h-6 rounded bg-gray-900 text-center text-gray-100 text-lg;
+  &::-webkit-inner-spin-button { display: none; }
+}
+.profitBox {
+  @apply w-full h-6 flex items-center justify-center rounded bg-gray-900 overflow-hidden;
+}
+.unitBar {
+  @apply flex gap-px justify-center;
+}
+.unitBtn {
+  @apply rounded bg-gray-900 px-1 h-6 flex items-center;
+  &:hover { @apply bg-gray-700; }
 }
 </style>

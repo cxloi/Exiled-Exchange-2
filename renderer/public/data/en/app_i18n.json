@@ -334,14 +334,18 @@
     "empty": "Click an item to pin it here",
     "show_sum": "Show pinned total",
     "hide_sum": "Hide pinned total",
-    "sum_pinned": "Pinned total",
-    "sum_missing": "Items with no price are excluded"
+    "sum": "Pinned total"
   },
   "url_list": {
-    "enable_keys": "Keys",
     "name": "Url list",
-    "search_text": "url address",
-    "friendly_name": "friendly name"
+    "section_name": "Section name",
+    "add_section": "Add section",
+    "add_entry": "Add",
+    "type_url": "URL",
+    "type_textbox": "Paragraph",
+    "type_stash_search": "Stash search",
+    "friendly_name": "Friendly name",
+    "text": "Content"
   },
   "campaign_guide": {
     "name": "Campaign guide",

@@ -42,6 +42,7 @@ export interface PriceTrackData {
   entries: Array<{ // pinned list to persist
     id: number;
     text: string; // item id, eg `ITEM::Chaos Orb` `GEM::Martial Tempo`
+    count?: number // for pinnedSum
   }>;
   limit?: number; // default per group limit
   unit?: DisplayUnit; // pure render only
