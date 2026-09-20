@@ -155,7 +155,7 @@ import {
   type CraftingWidget,
   type LinkSlot,
 } from "./widget.js";
-import { fetchFirstListingPrice } from "./trade-price.js";
+import { fetchListingPrice } from "./trade-price.js";
 import { useI18nNs } from "@/web/i18n";
 import Widget from "../overlay/Widget.vue";
 import PriceTrackPanel from "../price-track/PriceTrackPanel.vue";
@@ -249,7 +249,7 @@ async function refreshPrice(side: CalcSide) {
   side.loading = true;
   side.error = "";
   try {
-    const price = await fetchFirstListingPrice(url, leagues.selected.value?.id);
+    const price = await fetchListingPrice(url, leagues.selected.value?.id);
     if (!price) {
       side.error = t(":refresh_empty");
       return;

@@ -16,11 +16,12 @@ const UNIT_BY_TRADE_TAG: Record<string, DisplayUnit> = {
   chaos: "chaos",
 };
 
-export interface FirstListingPrice {
+export interface ListingPrice {
   amount: number; // listed amount, in `unit` when set, otherwise use `divValue`
   currency: string; // raw trade currency tag, for the error message
   unit?: DisplayUnit; // set when the listing currency match one of the calc units
   divValue?: number; // listed price converted to divine
+  sampled: number; // how many listings the average is built from
 }
 
 /**
@@ -45,10 +46,14 @@ export async function decodeSearchHash(
   }
 }
 
-export async function fetchFirstListingPrice(
+/**
+ * Runs the search stored in a slot and returns the average price of the first
+ * `SAMPLE_SIZE` priced listings (sorted by price, so: the cheapest ones).
+ */
+export async function fetchListingPrice(
   hash: string,
   league: string | undefined,
-): Promise<FirstListingPrice | undefined> {
+): Promise<ListingPrice | undefined> {
   if (!hash.trim() || !league) return undefined;
 
   const query = await decodeSearchHash(hash);
@@ -60,33 +65,49 @@ export async function fetchFirstListingPrice(
   );
   if (!search.result.length) return undefined;
 
+  // paginate size 10
   const results = await requestResults(
     search.id,
     search.result.slice(0, 10),
     { accountName: AppConfig().accountName },
   );
 
-  const listing = results.find(
-    (result) => !result.gone && result.priceAmount > 0,
-  );
-  if (!listing) return undefined;
+  // sample size 3
+  const sample = results
+    .filter((result) => !result.gone && result.priceAmount > 0)
+    .slice(0, 3);
+  if (!sample.length) return undefined;
 
   const { findPriceByQuery } = usePoeninja();
-  const unit = UNIT_BY_TRADE_TAG[listing.priceCurrency];
-  const perUnitDiv = findPriceByQuery(
-    getCurrencyDetailsId(listing.priceCurrency),
-  )?.primaryValue;
+  const toDiv = (amount: number, currency: string) => {
+    if (UNIT_BY_TRADE_TAG[currency] === "div") return amount;
+    const perUnitDiv = findPriceByQuery(
+      getCurrencyDetailsId(currency),
+    )?.primaryValue;
+    return perUnitDiv ? amount * perUnitDiv : undefined;
+  };
 
-  // always return div value
+  const divValues = sample
+    .map((result) => toDiv(result.priceAmount, result.priceCurrency))
+    .filter((value): value is number => value !== undefined);
+
+  // averaging raw amounts only makes sense while the whole sample is one currency
+  const units = new Set(
+    sample.map((result) => UNIT_BY_TRADE_TAG[result.priceCurrency]),
+  );
+  const unit = units.size === 1 ? [...units][0] : undefined;
+  const divValue = divValues.length ? avg(divValues) : undefined;
+
   return {
-    amount: listing.priceAmount,
-    currency: listing.priceCurrency,
+    amount: unit
+      ? avg(sample.map((result) => result.priceAmount))
+      : (divValue ?? 0),
+    currency: sample[0].priceCurrency,
     unit,
-    divValue:
-      unit === "div"
-        ? listing.priceAmount
-        : perUnitDiv
-          ? listing.priceAmount * perUnitDiv
-          : undefined,
+    divValue,
+    sampled: sample.length,
   };
 }
+
+const avg = (values: number[]) =>
+  values.reduce((sum, value) => sum + value, 0) / values.length;
