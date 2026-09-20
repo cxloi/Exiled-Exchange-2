@@ -1,29 +1,57 @@
 <template>
   <Widget :config="config" move-handles="corners" :inline-edit="false">
     <div
-      class="widget-default-style p-1 flex flex-col overflow-y-auto min-h-0"
+      class="widget-default-style p-1 flex flex-col overflow-auto min-h-0"
       style="min-width: 5rem"
     >
-      <div class="text-gray-100 p-1 flex items-center justify-between gap-4">
-        <span class="truncate">{{ config.wmTitle || "Untitled" }}</span>
-        <ui-toggle v-if="hasHotkeys" v-model="config.enableHotkeys">{{
-          t("url_list.enable_keys")
-        }}</ui-toggle>
+      <div v-if="config.wmTitle" class="text-gray-100 p-1">
+        <span class="truncate">{{ config.wmTitle }}</span>
       </div>
-      <div class="flex flex-col gap-y-1 overflow-y-auto min-h-0">
-        <button
-          v-for="entry in config.entries"
-          :key="entry.id"
-          @click="openUrl(entry.text)"
-          class="text-blue-600 underline hover:text-blue-800 visited:text-purple-600 bg-transparent p-0 border-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+
+      <!-- sections stack vertically -->
+      <div class="flex flex-col gap-1 overflow-auto min-h-0">
+        <div
+          v-for="section in config.sections"
+          :key="section.id"
+          :class="$style.section"
         >
-          <span>{{ entry.name || entry.text }}</span>
-          <span
-            v-if="entry.hotkey && config.enableHotkeys"
-            :class="$style.hotkey"
-            >{{ entry.hotkey }}</span
+          <div v-if="section.name" :class="$style.sectionTitle">
+            {{ section.name }}
+          </div>
+
+          <!-- entries inside a section are laid out horizontally -->
+          <div 
+            class="flex items-stretch "
+            :class="
+              section.type === 'textbox'
+                ? 'flex-col'
+                : 'flex-row flex-wrap gap-1'
+            "
           >
-        </button>
+            <template v-for="entry in section.entries" :key="entry.id">
+              <!-- textbox -->
+              <div v-if="section.type === 'textbox'" :class="$style.textBox">
+                <span class="whitespace-pre-wrap break-words">{{
+                  entry.text
+                }}</span>
+              </div>
+
+              <!-- url / stash-search -->
+              <div v-else :class="$style.entryRow">
+                <button
+                  :class="[
+                    $style.actionBtn,
+                    section.type === 'url' && $style.urlBtn,
+                  ]"
+                  :title="entry.text"
+                  @click="activate(section.type, entry)"
+                >
+                  <span :class="$style.label">{{ entry.name || entry.text }}</span>
+                </button>
+              </div>
+            </template>
+          </div>
+        </div>
       </div>
     </div>
   </Widget>
@@ -31,7 +59,6 @@
 
 <script lang="ts">
 import type { WidgetSpec } from "../overlay/interfaces.js";
-import type { UrlListWidget } from "./widget.js";
 
 export default {
   widget: {
@@ -52,9 +79,15 @@ export default {
             x: 35,
             y: 46,
           },
-          enableHotkeys: true,
-          entries: [
-            { id: 1, name: "POE DB", text: 'https://poe2db.tw/', hotkey: null },
+          sections: [
+            {
+              id: 1,
+              name: "Links",
+              type: "url",
+              entries: [
+                { id: 1, name: "POE DB", text: "https://poe2db.tw/" },
+              ],
+            },
           ],
         },
       ];
@@ -64,22 +97,22 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { inject, computed, watch } from "vue";
-import { useI18n } from "vue-i18n";
+import { inject } from "vue";
 import { MainProcess } from "@/web/background/IPC";
-import { pushHostConfig } from "@/web/Config";
 import type { WidgetManager } from "../overlay/interfaces.js";
 
 import Widget from "../overlay/Widget.vue";
-import UiToggle from "@/web/ui/UiToggle.vue";
-import { useLeagues } from "@/web/background/Leagues";
+import {
+  type UrlListEntry,
+  type UrlListSectionType,
+  type UrlListWidget,
+} from "./widget.js";
 
 const props = defineProps<{
   config: UrlListWidget;
 }>();
 
 const wm = inject<WidgetManager>("wm")!;
-const leagues = useLeagues();
 
 if (props.config.wmFlags[0] === "uninitialized") {
   props.config.wmFlags = ["invisible-on-blur"];
@@ -88,41 +121,65 @@ if (props.config.wmFlags[0] === "uninitialized") {
     x: Math.random() * (40 - 20) + 20,
     y: Math.random() * (40 - 20) + 20,
   };
-  props.config.enableHotkeys = true;
-  props.config.entries = [
+  props.config.sections = [
     {
       id: 1,
-      text: "https://poe2db.tw/tw/",
-      name: "POEDB",
-      hotkey: null,
+      name: "Links",
+      type: "url",
+      entries: [{ id: 1, name: "POEDB", text: "https://poe2db.tw/tw/" }],
     },
   ];
   wm.show(props.config.wmId);
 }
 
-function openUrl(text: string) {
-  window.open(text, "_blank");
+function openUrl(url: string) {
+  if (!url) return;
+  window.open(url, "_blank");
 }
 
-const hasHotkeys = computed(() =>
-  props.config.entries.some((entry) => entry.hotkey != null),
-);
+function stashSearch(text: string) {
+  MainProcess.sendEvent({
+    name: "CLIENT->MAIN::user-action",
+    payload: { action: "stash-search", text },
+  });
+}
 
-watch(
-  () => props.config.enableHotkeys,
-  () => {
-    pushHostConfig();
-  },
-);
-
-const { t } = useI18n();
+function activate(type: UrlListSectionType, entry: UrlListEntry) {
+  if (type === "stash-search") {
+    stashSearch(entry.text);
+  } else {
+    openUrl(entry.text);
+  }
+}
 </script>
 
 <style lang="postcss" module>
-.urlBtn {
+.section {
   flex-shrink: 0;
+  @apply flex flex-col gap-y-1;
+  @apply p-1 rounded;
+  @apply bg-gray-900;
+}
+
+.sectionTitle {
+  @apply text-gray-400 text-xs uppercase tracking-wide;
+  @apply px-1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.entryRow {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 16rem;
+  @apply flex items-stretch gap-x-1;
+}
+
+.actionBtn {
+  flex: 0 1 auto;
+  min-width: 0;
   @apply rounded;
-  @apply max-w-sm;
   @apply p-2 leading-4;
   @apply text-gray-100 bg-gray-800;
   text-align: left;
@@ -135,11 +192,23 @@ const { t } = useI18n();
   }
 }
 
-.hotkey {
-  text-align: center;
-  display: inline-block;
-  @apply text-black bg-gray-400;
-  @apply rounded;
-  @apply px-1 ml-1;
+.urlBtn {
+  &:hover {
+    @apply underline;
+  }
+}
+
+.label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.textBox {
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 24rem;
+  @apply rounded p-0.5 leading-4;
+  /* @apply text-gray-100 bg-gray-800; */
 }
 </style>

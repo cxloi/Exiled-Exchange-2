@@ -334,10 +334,15 @@
     "sum_missing": "無價格的物品不計入"
   },
   "url_list": {
-    "enable_keys": "按鍵",
     "name": "链接",
-    "search_text": "目标网址",
-    "friendly_name": "友好名稱"
+    "section_name": "區段名稱",
+    "add_section": "新增區段",
+    "add_entry": "新增资料",
+    "type_url": "連結",
+    "type_textbox": "段落",
+    "type_stash_search": "倉庫搜尋",
+    "friendly_name": "友好名稱",
+    "text": "内容"
   },
   "campaign_guide": {
     "name": "戰役指引",
