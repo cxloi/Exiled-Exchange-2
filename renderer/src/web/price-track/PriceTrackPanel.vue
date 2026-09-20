@@ -39,6 +39,14 @@
           :class="compact ? 'fa-angle-double-down' : 'fa-angle-double-up'"
         />
       </button>
+      <button
+        class="rounded bg-gray-900 px-1 h-6 flex items-center shrink-0"
+        :class="{ border: showSum }"
+        :title="t(showSum ? ':hide_sum' : ':show_sum')"
+        @click="toggleSum"
+      >
+        <i class="fas fa-plus w-4 text-sm" />
+      </button>
     </div>
 
     <!-- global search -->
@@ -103,7 +111,7 @@
         :disabled="compact && isPinned(row.id)"
         @click="togglePin(row.id)"
       >
-        <div class="w-8 h-8 flex items-center justify-center shrink-0">
+        <div class="w-6 h-6 flex items-center justify-center shrink-0">
           <ui-item-img
             v-if="hasIcon(row.icon)"
             :icon="row.icon"
@@ -149,6 +157,36 @@
       <div v-if="!rows.length" class="text-center text-gray-600 p-4">
         <i class="fas fa-exclamation-triangle" />
         {{ isSearching ? t(":not_found") : t(":empty") }}
+      </div>
+    </div>
+
+    <!-- pinned total -->
+    <div
+      v-if="showSum"
+      class="flex items-center px-1 py-1 border-t border-white shrink-0 mt-auto"
+    >
+      <div class="w-8 shrink-0 flex justify-center text-gray-600">
+        <i class="fas fa-equals text-sm" />
+      </div>
+      <div class="flex-1 min-w-0 truncate text-gray-400">
+        {{ t(":sum_pinned") }}
+        <span class="text-gray-600">({{ pinnedSum.counted }})</span>
+      </div>
+      <div
+        v-if="pinnedSum.missing"
+        class="text-xs text-gray-600 shrink-0"
+        :title="t(':sum_missing')"
+      >
+        +{{ pinnedSum.missing }}?
+      </div>
+      <div class="w-24 shrink-0 flex justify-end">
+        <item-quick-price
+          currency-text
+          fraction
+          :show-img="false"
+          :show-arrow="false"
+          :price="toPrice(pinnedSum.total)"
+        />
       </div>
     </div>
   </div>
@@ -307,6 +345,27 @@ const pinnedRows = computed<Row[]>(() => {
     .filter((row): row is Row => row != null);
   return frozenPinned;
 });
+const showSum = shallowRef(props.data.showSum ?? false);
+// every row.value already in divine units (primaryValue), summable
+const pinnedSum = computed(() => {
+  let total = 0;
+  let counted = 0;
+  let missing = 0;
+  for (const row of pinnedRows.value) {
+    if (row.value > 0) {
+      total += row.value;
+      counted += 1;
+    } else {
+      missing += 1;
+    }
+  }
+  return { total, counted, missing };
+});
+
+function toggleSum() {
+  showSum.value = !showSum.value;
+  props.data.showSum = showSum.value;
+}
 
 // final render rows
 let frozenRows: Row[] = [];
@@ -384,7 +443,7 @@ function hasIcon(icon: string) {
 
 <style lang="postcss" module>
 .row {
-  @apply flex items-center gap-x-1 px-1 py-0.5 rounded;
+  @apply flex items-center gap-x-1 px-1 rounded;
   @apply text-gray-400;
 
   &:hover:not(:disabled) {

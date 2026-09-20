@@ -327,7 +327,11 @@
     "cat_map_fragment": "碎片",
     "cat_unique": "傳奇",
     "not_found": "什麼都沒找到",
-    "empty": "點按一個物品加入置頂"
+    "empty": "點按一個物品加入置頂",
+    "show_sum": "顯示釘選合計",
+    "hide_sum": "隱藏釘選合計",
+    "sum_pinned": "釘選合計",
+    "sum_missing": "無價格的物品不計入"
   },
   "url_list": {
     "enable_keys": "按鍵",

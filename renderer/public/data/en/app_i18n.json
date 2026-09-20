@@ -331,7 +331,11 @@
     "cat_map_fragment": "Fragment",
     "cat_unique": "Unique",
     "not_found": "Nothing found",
-    "empty": "Click an item to pin it here"
+    "empty": "Click an item to pin it here",
+    "show_sum": "Show pinned total",
+    "hide_sum": "Hide pinned total",
+    "sum_pinned": "Pinned total",
+    "sum_missing": "Items with no price are excluded"
   },
   "url_list": {
     "enable_keys": "Keys",

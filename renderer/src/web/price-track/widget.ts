@@ -47,6 +47,7 @@ export interface PriceTrackData {
   unit?: DisplayUnit; // pure render only
   compact?: boolean; // collapse search + group chips + tabs
   wmTitle?: string; // optional, rendered by the default title slot
+  showSum?: boolean;
 }
 
 export interface PriceTrackWidget extends Widget, PriceTrackData {
