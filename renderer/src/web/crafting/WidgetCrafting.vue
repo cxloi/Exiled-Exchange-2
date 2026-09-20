@@ -196,6 +196,10 @@ if (props.config.wmFlags[0] === "uninitialized") {
 
 function openUrl(url: string) {
   if (!url) return;
+  if (url.startsWith("https://")) {
+    window.open(url, "_blank");
+    return;
+  }
   const league = leagues.selected.value;
   if(!league) return;
   window.open("https://www.pathofexile.com/trade2/search/poe2/"
