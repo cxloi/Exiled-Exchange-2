@@ -360,7 +360,6 @@
     "choose_build_file": "Choose .build file",
     "add_stage": "Add stage",
     "add_build": "Add build",
-    "bd": "BD",
     "level": "Level",
     "select_build": "Select build",
     "no_stage": "No stage for current level",

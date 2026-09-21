@@ -356,7 +356,6 @@
     "choose_build_file": "上傳 .build 檔案",
     "add_stage": "新增階段",
     "add_build": "新增構築",
-    "bd": "構築",
     "level": "等級",
     "select_build": "選擇構築",
     "no_stage": "目前等級沒有對應階段",

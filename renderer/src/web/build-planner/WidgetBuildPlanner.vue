@@ -7,22 +7,27 @@
   >
     <div
       class="p-1 flex flex-col gap-1 text-[#d9d6cf] [text-shadow:1px_1px_2px_#000]"
-      style="width: 12rem"
+      style="width: 11rem"
     >
-      <div class="flex items-center gap-1">
-        <span>{{ t(":bd") }}</span>
-        <select v-model="activeBuildId" class="rounded border flex-1 mx-2 bg-transparent">
+      <div class="flex justify-between items-center gap-1">
+        <select v-model="activeBuildId" class="max-w-20 truncate rounded border mr-2 bg-transparent">
           <option :value="null" disabled>{{ t(":select_build") }}</option>
           <option v-for="b in config.builds" :key="b.id" :value="b.id">
             {{ b.name || "#" + b.id }}
           </option>
         </select>
-        <span>{{ t(":level") }} {{ playerLevel }}</span>
+        <span class="shrink-0">{{ t(":level") }}</span>
+        <input
+          v-model.number="level"
+          type="number"
+          min="1"
+          max="100"
+          class="w-9 rounded border bg-transparent text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+          @focus="($event.target as HTMLInputElement).select()"
+        />
       </div>
 
-      
-
-      <div v-if="stage" class="px-1 py-1 truncate">
+      <div v-if="stage" class="pl-1 truncate">
         {{ stage.levelStart }}–{{ stage.levelEnd }}: {{ stage.fileName }}
       </div>
       <div v-else class="px-1 py-1">{{ t(":no_stage") }}</div>
@@ -77,7 +82,16 @@ import { BuildPlannerWidget, loadBuild, resetBuilds } from "./widget.js";
 const props = defineProps<{ config: BuildPlannerWidget }>();
 const wm = inject<WidgetManager>("wm")!;
 const { t } = useI18nNs("build_planner");
-const { playerLevel } = useClientLog();
+const { playerLevel, setPlayerLevel } = useClientLog();
+
+// editable level (shared with other level-based widgets; next level-up from the log overrides it)
+const level = computed({
+  get: () => playerLevel.value,
+  set: (v: number | "") => {
+    if (v === "" || !Number.isFinite(v)) return;
+    setPlayerLevel(Math.min(100, Math.max(1, Math.round(v))));
+  },
+});
 
 if (props.config.wmFlags[0] === "uninitialized") {
   props.config.wmFlags = [];
