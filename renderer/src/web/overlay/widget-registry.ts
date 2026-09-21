@@ -17,6 +17,7 @@ import WidgetPriceTrack from "../price-track/WidgetPriceTrack.vue";
 import WidgetUrlList from "../url-list/WidgetUrlList.vue";
 import WidgetCampaignGuide from "../campaign-guide/WidgetCampaignGuide.vue";
 import WidgetCrafting from "../crafting/WidgetCrafting.vue";
+import WidgetBuildPlanner from "../build-planner/WidgetBuildPlanner.vue";
 
 type WidgetComponent = Component & { widget: WidgetSpec };
 
@@ -47,3 +48,4 @@ registry.widgets.push(WidgetPriceTrack as unknown as WidgetComponent);
 registry.widgets.push(WidgetUrlList as unknown as WidgetComponent);
 registry.widgets.push(WidgetCampaignGuide as unknown as WidgetComponent);
 registry.widgets.push(WidgetCrafting as unknown as WidgetComponent);
+registry.widgets.push(WidgetBuildPlanner as unknown as WidgetComponent);

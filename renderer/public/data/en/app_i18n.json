@@ -350,6 +350,26 @@
     "friendly_name": "Friendly name",
     "text": "Content"
   },
+  "build_planner": {
+    "name": "Build planner",
+    "enable_read_client_logs": "Level matching requires reading client logs (Settings → General).",
+    "target_dir": "Build planner folder",
+    "build_name": "Build name",
+    "level_start": "From",
+    "level_end": "To",
+    "choose_build_file": "Choose .build file",
+    "add_stage": "Add stage",
+    "add_build": "Add build",
+    "bd": "BD",
+    "level": "Level",
+    "select_build": "Select build",
+    "no_stage": "No stage for current level",
+    "load": "Load",
+    "reset": "Reset",
+    "loaded": "Build loaded",
+    "cleared": "Build removed",
+    "auto_load": "Auto load when level enters a stage"
+  },
   "campaign_guide": {
     "name": "Campaign guide",
     "enable_read_client_logs": "Campaign widgets require allowing reading of client logs",

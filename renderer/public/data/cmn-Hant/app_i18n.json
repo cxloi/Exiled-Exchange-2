@@ -346,6 +346,26 @@
     "friendly_name": "友好名稱",
     "text": "内容"
   },
+  "build_planner": {
+    "name": "DB規劃",
+    "enable_read_client_logs": "等級匹配需要允許讀取客戶端日誌（設定 > 一般）",
+    "target_dir": "BD規劃資料夾",
+    "build_name": "BD名稱",
+    "level_start": "起始等級",
+    "level_end": "結束等級",
+    "choose_build_file": "上傳 .build 檔案",
+    "add_stage": "新增階段",
+    "add_build": "新增構築",
+    "bd": "構築",
+    "level": "等級",
+    "select_build": "選擇構築",
+    "no_stage": "目前等級沒有對應階段",
+    "load": "載入",
+    "reset": "重置",
+    "loaded": "BD已生效",
+    "cleared": "已刪除build",
+    "auto_load": "等級進入階段時自動載入"
+  },
   "campaign_guide": {
     "name": "戰役指引",
     "enable_read_client_logs": "戰役工具需要允許讀取客戶端日誌",

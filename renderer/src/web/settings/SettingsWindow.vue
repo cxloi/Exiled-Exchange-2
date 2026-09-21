@@ -145,6 +145,7 @@ import SettingsLibrary from "../library/settings-library.vue";
 import SettingsExpedition from "../expedition-check/settings-expedition.vue";
 import SettingsUrlList from "../url-list/url-list-editor.vue";
 import SettingsCampaignGuide from "../campaign-guide/campaign-guide-editor.vue";
+import SettingsBuildPlanner from "../build-planner/build-planner-editor.vue";
 import SettingsCrafting from "../crafting/crafting-editor.vue";
 import { disableWidget, enableWidget, findWidget } from "./utils";
 
@@ -361,6 +362,8 @@ function menuByType(type?: string) {
       return [[SettingsCampaignGuide]];
     case "crafting":
       return [[SettingsCrafting]];
+    case "build-planner":
+      return [[SettingsBuildPlanner]];
     default:
       return [
         [SettingsHotkeys, SettingsChat],

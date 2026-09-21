@@ -8,6 +8,7 @@ import { app } from "electron";
 import { IpcEvent, IpcEventPayload, HostState } from "../../ipc/types";
 import { ConfigStore } from "./host-files/ConfigStore";
 import { addFileUploadRoutes } from "./host-files/file-uploads";
+import { addBuildPlannerRoutes } from "./host-files/build-planner";
 import type { AppUpdater } from "./AppUpdater";
 import type { Logger } from "./RemoteLogger";
 
@@ -16,10 +17,12 @@ const websocketServer = new WebSocketServer({ noServer: true });
 let lastActiveClient: WebSocket;
 
 addFileUploadRoutes(server);
+addBuildPlannerRoutes(server);
 
 if (!process.env.VITE_DEV_SERVER_URL) {
   server.addListener("request", (req, res) => {
     if (
+      req.url?.startsWith("/build-planner") ||
       req.url?.startsWith("/config") ||
       req.url?.startsWith("/uploads") ||
       req.url?.startsWith("/proxy")
