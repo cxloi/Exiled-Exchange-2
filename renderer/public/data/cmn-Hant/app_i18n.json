@@ -347,7 +347,7 @@
     "text": "内容"
   },
   "build_planner": {
-    "name": "DB規劃",
+    "name": "BD規劃",
     "enable_read_client_logs": "等級匹配需要允許讀取客戶端日誌（設定 > 一般）",
     "target_dir": "BD規劃資料夾",
     "build_name": "BD名稱",
@@ -363,7 +363,8 @@
     "reset": "重置",
     "loaded": "BD已生效",
     "cleared": "已刪除build",
-    "auto_load": "等級進入階段時自動載入"
+    "auto_load": "等級進入階段時自動載入",
+    "tech": "機制"
   },
   "campaign_guide": {
     "name": "戰役指引",

@@ -54,50 +54,60 @@
             :force-fallback="true"
           >
             <template #item="{ element: stage, index: si }">
-              <div
-                class="grid gap-0.5 items-center"
-                style="grid-template-columns: auto 3.5rem 3.5rem 1fr auto"
-              >
-                <button
-                  class="leading-none cursor-move bg-gray-700 rounded-l w-6 h-6"
-                  data-qa="stage-handle"
+              <div class="flex flex-col gap-0.5">
+                <div
+                  class="grid gap-0.5 items-center"
+                  style="grid-template-columns: auto 3.5rem 3.5rem 1fr auto"
                 >
-                  <i class="fas fa-grip-vertical text-gray-400" />
-                </button>
-                <input
-                  v-model.number="stage.levelStart"
-                  type="number"
-                  min="1"
-                  max="100"
-                  :placeholder="t(':level_start')"
-                  class="bg-gray-900 px-1"
-                />
-                <input
-                  v-model.number="stage.levelEnd"
-                  type="number"
-                  min="1"
-                  max="100"
-                  :placeholder="t(':level_end')"
-                  class="bg-gray-900 px-1"
-                />
-                <label
-                  class="bg-gray-900 px-1 truncate cursor-pointer"
-                  :class="{ 'text-gray-500': !stage.file }"
-                >
-                  {{ stage.file ? stage.fileName : t(":choose_build_file") }}
+                  <button
+                    class="leading-none cursor-move bg-gray-700 rounded-l w-6 h-6"
+                    data-qa="stage-handle"
+                  >
+                    <i class="fas fa-grip-vertical text-gray-400" />
+                  </button>
                   <input
-                    type="file"
-                    accept=".build"
-                    class="hidden"
-                    @change="onFile(stage, $event)"
+                    v-model.number="stage.levelStart"
+                    type="number"
+                    min="1"
+                    max="100"
+                    :placeholder="t(':level_start')"
+                    class="bg-gray-900 px-1"
                   />
-                </label>
-                <button
-                  class="bg-gray-700 rounded-r w-6 h-6"
-                  @click="removeStage(build, si)"
-                >
-                  <i class="fas fa-times text-gray-400" />
-                </button>
+                  <input
+                    v-model.number="stage.levelEnd"
+                    type="number"
+                    min="1"
+                    max="100"
+                    :placeholder="t(':level_end')"
+                    class="bg-gray-900 px-1"
+                  />
+                  <label
+                    class="bg-gray-900 px-1 truncate cursor-pointer"
+                    :class="{ 'text-gray-500': !stage.file }"
+                  >
+                    {{ stage.file ? stage.fileName : t(":choose_build_file") }}
+                    <input
+                      type="file"
+                      accept=".build"
+                      class="hidden"
+                      @change="onFile(stage, $event)"
+                    />
+                  </label>
+                  <button
+                    class="bg-gray-700 rounded-r w-6 h-6"
+                    @click="removeStage(build, si)"
+                  >
+                    <i class="fas fa-times text-gray-400" />
+                  </button>
+                </div>
+                <div class="grid grid-cols-2 gap-0.5 pl-6">
+                  <textarea
+                    v-model="stage.tech"
+                    :placeholder="t(':tech')"
+                    rows="2"
+                    class="bg-gray-900 px-1 col-span-2 resize-y"
+                  />
+                </div>
               </div>
             </template>
           </dnd-container>
@@ -168,6 +178,7 @@ export default defineComponent({
           levelEnd: 100,
           file: null,
           fileName: "",
+          tech: "",
         });
       },
       removeStage(build: BuildEntry, index: number) {

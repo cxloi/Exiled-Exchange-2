@@ -1,16 +1,14 @@
 <template>
-  <Widget
-    :config="config"
-    move-handles="corners"
-    :inline-edit="false"
-    :removable="true"
-  >
+  <Widget :config="config" move-handles="corners" :inline-edit="false" :removable="true">
     <div
-      class="p-1 flex flex-col gap-1 text-[#d9d6cf] [text-shadow:1px_1px_2px_#000]"
-      style="width: 11rem"
+      class="p-1 flex flex-col gap-0.5 text-[#d9d6cf] [text-shadow:1px_1px_2px_#000]"
+      style="width: 12rem"
     >
       <div class="flex justify-between items-center gap-1">
-        <select v-model="activeBuildId" class="max-w-20 truncate rounded border mr-2 bg-transparent">
+        <select
+          v-model="activeBuildId"
+          class="max-w-20 truncate rounded border mr-2 bg-transparent"
+        >
           <option :value="null" disabled>{{ t(":select_build") }}</option>
           <option v-for="b in config.builds" :key="b.id" :value="b.id">
             {{ b.name || "#" + b.id }}
@@ -30,6 +28,11 @@
       <div v-if="stage" class="pl-1 truncate">
         {{ stage.levelStart }}–{{ stage.levelEnd }}: {{ stage.fileName }}
       </div>
+      <template v-if="stage">
+        <div v-if="stage.tech" class="pl-1 whitespace-pre-wrap break-words">
+          {{ stage.tech }}
+        </div>
+      </template>
       <div v-else class="px-1 py-1">{{ t(":no_stage") }}</div>
 
       <div class="flex gap-1 justify-end">
@@ -116,13 +119,13 @@ const activeBuildId = computed({
 });
 
 const build = computed(() =>
-  props.config.builds.find((b) => b.id === props.config.activeBuildId),
+  props.config.builds.find((b) => b.id === props.config.activeBuildId)
 );
 
 const stage = computed(() =>
   build.value?.stages.find(
-    (s) => playerLevel.value >= s.levelStart && playerLevel.value <= s.levelEnd,
-  ),
+    (s) => playerLevel.value >= s.levelStart && playerLevel.value <= s.levelEnd
+  )
 );
 
 const busy = ref(false);
@@ -145,22 +148,16 @@ async function run(fn: () => Promise<unknown>, okMsg: string) {
 
 const load = () =>
   run(() => loadBuild(props.config.targetDir, stage.value!), t(":loaded"));
-  
+
 // auto load when the matching stage changes (level up / build switch)
 watch(
   () => stage.value?.file,
   (file, prev) => {
-    if (
-      props.config.autoLoad &&
-      file &&
-      file !== prev &&
-      props.config.targetDir
-    ) {
+    if (props.config.autoLoad && file && file !== prev && props.config.targetDir) {
       load();
     }
-  },
+  }
 );
 
-const reset = () =>
-  run(() => resetBuilds(props.config.targetDir), t(":cleared"));
+const reset = () => run(() => resetBuilds(props.config.targetDir), t(":cleared"));
 </script>

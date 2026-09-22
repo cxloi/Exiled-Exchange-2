@@ -367,7 +367,8 @@
     "reset": "Reset",
     "loaded": "Build loaded",
     "cleared": "Build removed",
-    "auto_load": "Auto load when level enters a stage"
+    "auto_load": "Auto load when level enters a stage",
+    "tech": "Tech"
   },
   "campaign_guide": {
     "name": "Campaign guide",

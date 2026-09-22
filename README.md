@@ -19,6 +19,12 @@ Craft steps widget can list required currencies pricing, trade basetype, check t
 |-----------------------------------------------------------------------|-----------------------------------------------------------------------|
 | ![Craft Setting](./renderer/public/images/craft-setting.png) | ![Craft Result](./renderer/public/images/craft-result.png) |
 
+## Build Planner Widget
+Load or reset .build file and maintain from EE2, auto apply different .build when hitting stages level interval.
+| Setting                                                               | Display                                                               |
+|-----------------------------------------------------------------------|-----------------------------------------------------------------------|
+| ![Build Planner Setting](./renderer/public/images/buildPlanner-setting.png) | ![Build Planner Result](./renderer/public/images/buildPlanner-result.png) |
+
 ## Campaign Guide Widget
 Customisable campaign guide, default instructions only for zh-Hans + en.
 | Setting                                                               | Display                                                               |

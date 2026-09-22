@@ -6,6 +6,7 @@ export interface BuildStage {
   levelEnd: number;
   file: string | null; // stored name in /builds, beside config
   fileName: string; // original .build file name
+  tech?: string; // mechanic explanation
 }
 
 export interface BuildEntry {
