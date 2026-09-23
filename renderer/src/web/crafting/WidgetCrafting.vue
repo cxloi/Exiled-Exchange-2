@@ -229,8 +229,13 @@ if (props.config.wmFlags[0] === "uninitialized") {
   wm.show(props.config.wmId);
 }
 
-const openUrl = (url: string) =>
+const openUrl = (url: string) => {
+  if (url.startsWith("https://")) {
+    window.open(url, "_blank");
+    return;
+  }
   openTradeSearch(url, leagues.selected.value?.id);
+}
 
 // pull the cheapest behind the slot url into the input
 async function refreshPrice(side: CalcSide) {

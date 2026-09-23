@@ -135,7 +135,7 @@ if (props.config.wmFlags[0] === "uninitialized") {
     x: Math.random() * (40 - 20) + 20,
     y: Math.random() * (40 - 20) + 20,
   };
-  props.config.wmTitle = "";
+  props.config.wmTitle = t(":name");
   props.config.targetDir = "";
   props.config.autoLoad = false;
   props.config.activeBuildId = null;
