@@ -108,8 +108,7 @@
         <button
           :class="$style.row"
           class="flex-1 min-w-0"
-          :disabled="compact && isPinned(row.id)"
-          @click="togglePin(row.id)"
+          @click="togglePin(row.id, row.name)"
         >
           <div class="w-6 h-6 flex items-center justify-center shrink-0">
             <ui-item-img
@@ -197,6 +196,7 @@
 </template>
 
 <script setup lang="ts">
+import { MainProcess } from "@/web/background/IPC";
 import { computed, onMounted, onUnmounted, shallowRef } from "vue";
 import {
   DISPLAY_UNITS,
@@ -437,11 +437,14 @@ function toggleCompact() {
 function isPinned(id: string) {
   return pinnedIds.value.has(id);
 }
-function togglePin(id: string) {
+function togglePin(id: string, name: string) {
   const entries = props.data.entries;
   const idx = entries.findIndex((entry) => entry.text === id);
   if (idx !== -1) {
-    if (compact.value) return; // collapsed, block unpin
+    if (compact.value) {
+      stashSearch(name);
+      return; // collapsed, block unpin
+    }
     entries.splice(idx, 1);
   } else {
     entries.push({
@@ -466,6 +469,13 @@ onUnmounted(() => {
 
 function hasIcon(icon: string) {
   return Boolean(icon) && icon !== "%NOT_FOUND%";
+}
+
+function stashSearch(text: string) {
+  MainProcess.sendEvent({
+    name: "CLIENT->MAIN::user-action",
+    payload: { action: "stash-search", text },
+  });
 }
 </script>
 
