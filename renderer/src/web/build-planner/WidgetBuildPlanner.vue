@@ -2,27 +2,29 @@
   <Widget :config="config" move-handles="corners" :inline-edit="false" :removable="true">
     <div
       class="widget-default-style p-2 flex flex-col gap-0.5"
-      style="width: 12rem"
+      style="width: 15rem"
     >
-      <div class="flex justify-between items-center gap-1">
+      <div class="flex justify-between items-center gap-1 py-0.5">
         <select
           v-model="activeBuildId"
-          class="max-w-20 truncate rounded border mr-2 bg-transparent"
+          class="max-w-25 truncate rounded border mr-2 bg-transparent"
         >
           <option :value="null" disabled>{{ t(":select_build") }}</option>
           <option v-for="b in config.builds" :key="b.id" :value="b.id">
             {{ b.name || "#" + b.id }}
           </option>
         </select>
-        <span class="shrink-0">{{ t(":level") }}</span>
-        <input
-          v-model.number="level"
-          type="number"
-          min="1"
-          max="100"
-          class="w-9 rounded border bg-transparent text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-          @focus="($event.target as HTMLInputElement).select()"
-        />
+        <div>
+          <span class="shrink-0 mr-2">{{ t(":level") }}</span>
+          <input
+            v-model.number="level"
+            type="number"
+            min="1"
+            max="100"
+            class="w-9 rounded border bg-transparent text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+            @focus="($event.target as HTMLInputElement).select()"
+          />
+        </div>
       </div>
 
       <div v-if="stage" class="pl-1 truncate">
