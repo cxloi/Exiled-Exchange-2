@@ -1,7 +1,7 @@
 <template>
   <Widget :config="config" move-handles="corners" :inline-edit="false" :removable="true">
     <div
-      class="p-1 flex flex-col gap-0.5 text-[#d9d6cf] [text-shadow:1px_1px_2px_#000]"
+      class="widget-default-style p-2 flex flex-col gap-0.5"
       style="width: 12rem"
     >
       <div class="flex justify-between items-center gap-1">
@@ -46,6 +46,7 @@
         <button
           class="rounded bg-transparent px-1 h-6 flex items-center shrink-0"
           :disabled="!stage?.file || !config.targetDir || busy"
+          :title="t(':load')"
           @click="load"
         >
           <i class="fas fa-spinner w-4 text-sm" />
@@ -53,9 +54,31 @@
         <button
           class="rounded bg-transparent px-1 h-6 flex items-center shrink-0"
           :disabled="!config.targetDir || busy"
+          :title="t(':reset')"
           @click="reset"
         >
           <i class="fas fa-ban w-4 text-sm" />
+        </button>
+        <button
+          class="rounded bg-transparent px-1 h-6 flex items-center shrink-0"
+          :disabled="!stage?.items?.length"
+          :title="t(':core')"
+          @click="expanded = !expanded"
+        >
+          <i class="fas w-4 text-sm" :class="expanded ? 'fa-chevron-up' : 'fa-chevron-down'" />
+        </button>
+      </div>
+
+      <div v-if="expanded && stage?.items?.length" class="flex flex-col gap-0.5">
+        <button
+          v-for="item in stage.items"
+          :key="item.id"
+          :class="$style.link"
+          :disabled="!item.url"
+          :title="item.url"
+          @click="openUrl(item.url)"
+        >
+          <span :class="$style.linkName">{{ item.name || "?" }}</span>
         </button>
       </div>
     </div>
@@ -80,12 +103,19 @@ import Widget from "../overlay/Widget.vue";
 import type { WidgetManager } from "../overlay/interfaces.js";
 import { useI18nNs } from "@/web/i18n";
 import { useClientLog } from "../client-log/client-log.js";
+import { useLeagues } from "@/web/background/Leagues";
+import { openTradeSearch } from "@/web/trade-url";
 import { BuildPlannerWidget, loadBuild, resetBuilds } from "./widget.js";
 
 const props = defineProps<{ config: BuildPlannerWidget }>();
 const wm = inject<WidgetManager>("wm")!;
 const { t } = useI18nNs("build_planner");
 const { playerLevel, setPlayerLevel } = useClientLog();
+const leagues = useLeagues();
+const expanded = ref(true);
+
+const openUrl = (url: string) =>
+  openTradeSearch(url, leagues.selected.value?.id);
 
 // editable level (shared with other level-based widgets; next level-up from the log overrides it)
 const level = computed({
@@ -97,7 +127,7 @@ const level = computed({
 });
 
 if (props.config.wmFlags[0] === "uninitialized") {
-  props.config.wmFlags = [];
+  props.config.wmFlags = ["invisible-on-blur"];
   props.config.anchor = {
     pos: "tl",
     x: Math.random() * (40 - 20) + 20,
@@ -161,3 +191,28 @@ watch(
 
 const reset = () => run(() => resetBuilds(props.config.targetDir), t(":cleared"));
 </script>
+
+<style lang="postcss" module>
+.link {
+  @apply flex flex-col items-center justify-center min-w-0 p-1 overflow-hidden;
+  @apply rounded border border-transparent;
+
+  &:hover:not(:disabled) {
+    @apply border border-white;
+  }
+
+  &:disabled {
+    @apply text-gray-700;
+  }
+}
+
+.linkName {
+  @apply text-center leading-4;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+</style>

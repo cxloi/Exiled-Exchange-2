@@ -366,9 +366,13 @@
     "load": "Load",
     "reset": "Reset",
     "loaded": "Build loaded",
+    "core": "Core",
     "cleared": "Build removed",
     "auto_load": "Auto load when level enters a stage",
-    "tech": "Tech"
+    "tech": "Tech",
+    "item_name": "Item name",
+    "item_url": "Trade search id",
+    "add_item": "Add core item"
   },
   "campaign_guide": {
     "name": "Campaign guide",

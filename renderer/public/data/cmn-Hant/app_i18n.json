@@ -362,9 +362,13 @@
     "load": "載入",
     "reset": "重置",
     "loaded": "BD已生效",
+    "core": "核心裝",
     "cleared": "已刪除build",
     "auto_load": "等級進入階段時自動載入",
-    "tech": "機制"
+    "tech": "機制",
+    "item_name": "物品名稱",
+    "item_url": "交易搜尋",
+    "add_item": "新增核心物品"
   },
   "campaign_guide": {
     "name": "戰役指引",

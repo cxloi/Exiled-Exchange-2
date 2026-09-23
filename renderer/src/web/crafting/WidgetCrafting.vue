@@ -161,6 +161,7 @@ import Widget from "../overlay/Widget.vue";
 import PriceTrackPanel from "../price-track/PriceTrackPanel.vue";
 import { DISPLAY_UNITS, type DisplayUnit } from "../price-track/widget.js";
 import { useLeagues } from "@/web/background/Leagues";
+import { openTradeSearch, toTradeId } from "@/web/trade-url";
 
 const props = defineProps<{ config: CraftingWidget }>();
 
@@ -228,18 +229,8 @@ if (props.config.wmFlags[0] === "uninitialized") {
   wm.show(props.config.wmId);
 }
 
-function openUrl(url: string) {
-  if (!url) return;
-  if (url.startsWith("https://")) {
-    window.open(url, "_blank");
-    return;
-  }
-  const league = leagues.selected.value;
-  if(!league) return;
-  window.open("https://www.pathofexile.com/trade2/search/poe2/"
-    + encodeURIComponent(league.id) + "/"
-    + url, "_blank");
-}
+const openUrl = (url: string) =>
+  openTradeSearch(url, leagues.selected.value?.id);
 
 // pull the cheapest behind the slot url into the input
 async function refreshPrice(side: CalcSide) {
@@ -249,7 +240,7 @@ async function refreshPrice(side: CalcSide) {
   side.loading = true;
   side.error = "";
   try {
-    const price = await fetchListingPrice(url, leagues.selected.value?.id);
+    const price = await fetchListingPrice(toTradeId(url), leagues.selected.value?.id);
     if (!price) {
       side.error = t(":refresh_empty");
       return;

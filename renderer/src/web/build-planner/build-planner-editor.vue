@@ -107,6 +107,36 @@
                     rows="2"
                     class="bg-gray-900 px-1 col-span-2 resize-y"
                   />
+                  <div
+                    v-for="(item, ii) in stage.items"
+                    :key="item.id"
+                    class="col-span-2 grid gap-0.5"
+                    style="grid-template-columns: 1fr 1fr auto"
+                  >
+                    <input
+                      v-model="item.name"
+                      :placeholder="t(':item_name')"
+                      class="bg-gray-900 px-1"
+                    />
+                    <input
+                      v-model.trim="item.url"
+                      :placeholder="t(':item_url')"
+                      @change="item.url = toTradeId(item.url)"
+                      class="bg-gray-900 px-1"
+                    />
+                    <button
+                      class="bg-gray-700 rounded-r w-6 h-6"
+                      @click="stage.items!.splice(ii, 1)"
+                    >
+                      <i class="fas fa-times text-gray-400" />
+                    </button>
+                  </div>
+                  <button
+                    class="col-span-2 bg-gray-700 rounded text-gray-400"
+                    @click="addItem(stage)"
+                  >
+                    {{ t(":add_item") }}
+                  </button>
                 </div>
               </div>
             </template>
@@ -142,6 +172,7 @@ import {
   uploadBuild,
   deleteStoredBuild,
 } from "./widget.js";
+import { toTradeId } from "@/web/trade-url";
 
 export default defineComponent({
   name: "build_planner.name",
@@ -153,6 +184,7 @@ export default defineComponent({
 
     return {
       t,
+      toTradeId,
       error,
       title: configModelValue(() => props.configWidget, "wmTitle"),
       targetDir: configModelValue(() => props.configWidget, "targetDir"),
@@ -179,7 +211,12 @@ export default defineComponent({
           file: null,
           fileName: "",
           tech: "",
+          items: [],
         });
+      },
+      addItem(stage: BuildStage) {
+        if (!stage.items) stage.items = [];
+        stage.items.push({ id: nextId(stage.items), name: "", url: "" });
       },
       removeStage(build: BuildEntry, index: number) {
         const [s] = build.stages.splice(index, 1);

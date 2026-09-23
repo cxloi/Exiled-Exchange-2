@@ -21,8 +21,9 @@
           class="bg-gray-900 rounded px-1 leading-6"
         />
         <input
-          v-model="configWidget[slot].url"
+          v-model.trim="configWidget[slot].url"
           :placeholder="t('crafting.link_url')"
+          @change="configWidget[slot].url = toTradeId(configWidget[slot].url)"
           class="rounded px-1 leading-6"
         />
       </div>
@@ -87,6 +88,7 @@ import { useI18n } from "vue-i18n";
 import DndContainer from "vuedraggable";
 import { configProp, configModelValue } from "../settings/utils.js";
 import { LINK_SLOTS, type CraftingWidget } from "./widget.js";
+import { toTradeId } from "@/web/trade-url";
 
 export default defineComponent({
   name: "crafting.name",
@@ -98,6 +100,7 @@ export default defineComponent({
     return {
       t,
       LINK_SLOTS,
+      toTradeId,
       title: configModelValue(() => props.configWidget, "wmTitle"),
       steps: configModelValue(() => props.configWidget, "steps"),
       removeStep(id: number) {

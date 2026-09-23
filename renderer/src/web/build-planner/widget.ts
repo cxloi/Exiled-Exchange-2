@@ -1,5 +1,12 @@
 import type { Widget, Anchor } from "../overlay/widgets.js";
 
+export interface BuildItem {
+  id: number;
+  name: string;
+  url: string;
+}
+
+
 export interface BuildStage {
   id: number;
   levelStart: number;
@@ -7,6 +14,7 @@ export interface BuildStage {
   file: string | null; // stored name in /builds, beside config
   fileName: string; // original .build file name
   tech?: string; // mechanic explanation
+  items?: BuildItem[]; // core item trade links
 }
 
 export interface BuildEntry {
