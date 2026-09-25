@@ -371,6 +371,7 @@
     "auto_load": "Auto load when level enters a stage",
     "tech": "Tech",
     "item_name": "Item name",
+    "item_note": "Item note",
     "item_url": "Trade search id",
     "add_item": "Add core item"
   },

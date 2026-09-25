@@ -77,7 +77,7 @@
           :key="item.id"
           :class="$style.link"
           :disabled="!item.url"
-          :title="item.url"
+          :title="item?.note || '?'"
           @click="openUrl(item.url)"
         >
           <span :class="$style.linkName">{{ item.name || "?" }}</span>

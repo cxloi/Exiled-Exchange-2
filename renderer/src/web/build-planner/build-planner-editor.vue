@@ -111,11 +111,16 @@
                     v-for="(item, ii) in stage.items"
                     :key="item.id"
                     class="col-span-2 grid gap-0.5"
-                    style="grid-template-columns: 1fr 1fr auto"
+                    style="grid-template-columns: 1fr 1fr 1fr auto"
                   >
                     <input
                       v-model="item.name"
                       :placeholder="t(':item_name')"
+                      class="bg-gray-900 px-1"
+                    />
+                    <input
+                      v-model="item.note"
+                      :placeholder="t(':item_note')"
                       class="bg-gray-900 px-1"
                     />
                     <input

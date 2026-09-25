@@ -4,6 +4,7 @@ export interface BuildItem {
   id: number;
   name: string;
   url: string;
+  note?: string
 }
 
 
